@@ -1,0 +1,40 @@
+﻿
+namespace NanoFlow {
+
+    public partial class App : Application {
+
+        public static ServiceProvider? Services { get; private set; }
+
+        private const string SyncfusionLicense = "MzczMDcxNEAzMjM4MmUzMDJlMzBrV3dmVEhRTFFJRmtZRGZUdzRqeEJmN3lOcU5wUkwzb2tBRnRuOVNyOHJzPQ==";
+
+        public App() {
+
+            SyncfusionLicenseProvider.RegisterLicense(SyncfusionLicense);
+
+            var services = new ServiceCollection();
+
+            services.AddSingleton<MainViewModel>();
+
+            services.AddTransient(p =>
+                                 new MainWindow(
+                                     p.GetRequiredService<MainViewModel>()));
+
+            Services = services.BuildServiceProvider();
+
+            InitializeComponent();
+        }
+
+        protected override void OnLaunched(LaunchActivatedEventArgs args) {
+
+            var window = Services!.GetRequiredService<MainWindow>();
+            window.Activate();
+
+            var hwnd = WindowNative.GetWindowHandle(window);
+            var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
+            var appWindow = AppWindow.GetFromWindowId(windowId);
+
+            var presenter = appWindow.Presenter as OverlappedPresenter;
+            presenter?.Maximize();
+        }
+    }
+}

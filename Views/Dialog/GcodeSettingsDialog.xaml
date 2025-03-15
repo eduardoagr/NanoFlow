@@ -1,0 +1,80 @@
+<ContentDialog
+    x:Class="NanoFlow.Views.Dialog.GcodeSettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:NanoFlow.Views.Dialog"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Save G-Code"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonText="Save"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="16">
+        <TextBox
+            Width="300"
+            PlaceholderText="Enter a name or the g-code commands (e.g., Mycomands)"
+            Text="{x:Bind _viewModel.GCodeSettings.FileName, Mode=TwoWay}" />
+
+        <ComboBox
+            Width="300"
+            ItemsSource="{x:Bind _viewModel.GCodeSettings.PrinterModels}"
+            PlaceholderText="Select Printer Model"
+            SelectedItem="{x:Bind _viewModel.GCodeSettings.SelectedPrinterModel, Mode=TwoWay}" />
+
+        <ComboBox
+            Width="300"
+            ItemsSource="{x:Bind _viewModel.GCodeSettings.FilamentTypes}"
+            PlaceholderText="Select Filament Type"
+            SelectedItem="{x:Bind _viewModel.GCodeSettings.SelectedFilament, Mode=TwoWay}" />
+
+        <ComboBox
+            Width="300"
+            ItemsSource="{x:Bind _viewModel.GCodeSettings.NozzleSizes}"
+            PlaceholderText="Select Nozzle Size (mm)"
+            SelectedItem="{x:Bind _viewModel.GCodeSettings.SelectedNozzleSize, Mode=TwoWay}" />
+
+        <TextBox
+            Width="300"
+            PlaceholderText="Layer Height (mm, e.g., 0.2)"
+            Text="{x:Bind _viewModel.GCodeSettings.LayerHeight, Mode=TwoWay}" />
+
+        <TextBox
+            Width="300"
+            PlaceholderText="Extruder Temperature (°C, e.g., 200)"
+            Text="{x:Bind _viewModel.GCodeSettings.ExtruderTemp, Mode=TwoWay}" />
+
+        <TextBox
+            Width="300"
+            PlaceholderText="Bed Temperature (°C, e.g., 60)"
+            Text="{x:Bind _viewModel.GCodeSettings.BedTemp, Mode=TwoWay}" />
+
+        <TextBox
+            Width="300"
+            PlaceholderText="Retraction (mm, e.g., 5.0)"
+            Text="{x:Bind _viewModel.GCodeSettings.Retraction, Mode=TwoWay}" />
+
+        <TextBox
+            Width="300"
+            PlaceholderText="Print Speed (mm/s, e.g., 50)"
+            Text="{x:Bind _viewModel.GCodeSettings.PrintSpeed, Mode=TwoWay}" />
+
+        <ComboBox
+            Width="300"
+            ItemsSource="{x:Bind _viewModel.GCodeSettings.BedLevelingOptions}"
+            PlaceholderText="Select Bed Leveling Option"
+            SelectedItem="{x:Bind _viewModel.GCodeSettings.SelectedBedLeveling, Mode=TwoWay}" />
+
+        <TextBox
+            Width="300"
+            PlaceholderText="Cooling Speed (% e.g., 100)"
+            Text="{x:Bind _viewModel.GCodeSettings.CoolingSpeed, Mode=TwoWay}" />
+
+        <TextBox
+            Width="300"
+            PlaceholderText="Extrusion Length (mm, e.g., 100)"
+            Text="{x:Bind _viewModel.GCodeSettings.ExtrusionLength, Mode=TwoWay}" />
+    </StackPanel>
+
+</ContentDialog>

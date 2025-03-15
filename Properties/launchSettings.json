@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NanoFlow (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "NanoFlow (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
