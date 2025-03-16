@@ -1,4 +1,7 @@
-﻿namespace NanoFlow.ViewModels;
+﻿using Windows.Data.Xml.Dom;
+using Windows.UI.Notifications;
+
+namespace NanoFlow.ViewModels;
 
 public partial class MainViewModel : ObservableObject {
 
@@ -70,7 +73,7 @@ public partial class MainViewModel : ObservableObject {
 
             // Generate the STL file
             GetLineData(); // Ensure LineData is updated
-            ShowSavedDialog(fileName, "Design saved successfully.");
+            Toast(fileName);
             ExportSTL(fileName, 5.0);
         }
     }
@@ -115,7 +118,7 @@ public partial class MainViewModel : ObservableObject {
             ExportToGcode(fileName, printerModel, filamentType, nozzleSize, layerHeight,
                 extruderTemp, bedTemp, retraction, printSpeed, bedLeveling, coolingSpeed, extruderAmount);
 
-            Console.WriteLine("G-code file generated successfully.");
+            Toast(fileName);
         }
     }
 
@@ -363,8 +366,10 @@ public partial class MainViewModel : ObservableObject {
         var gcodeFilePath = Path.Combine(designsFolder, fileName);
         File.WriteAllText(gcodeFilePath, gcodeContent.ToString());
 
-        ShowSavedDialog(fileName, gcodeContent.ToString());
+        Toast(fileName);
     }
+
+
     private static void AddRectangleToSTL(StringWriter stl, PointModel3D p1, PointModel3D p2,
         PointModel3D p3, PointModel3D p4) {
 
@@ -384,16 +389,28 @@ public partial class MainViewModel : ObservableObject {
         stl.WriteLine("  endfacet");
     }
 
-    private async void ShowSavedDialog(string fileName, string content) {
-        // Create the ContentDialog dynamically
-        var dialog = new ContentDialog {
-            Title = "Success",
-            Content = $"G-code file '{fileName}' saved successfully.",
-            CloseButtonText = "OK"
-        };
+    private void Toast(string fileName) {
 
-        // Show the dialog
-        await dialog.ShowAsync();
+        // Define the toast content as a string
+        string toastXmlString =
+            "<toast>" +
+            "<visual>" +
+            "<binding template='ToastGeneric'>" +
+            $"<text>Success</text>" +
+            $"<text>'{fileName}' saved successfully.</text>" +
+            "</binding>" +
+            "</visual>" +
+            "</toast>";
+
+        // Create an XML document for the toast content
+        XmlDocument toastXml = new();
+        toastXml.LoadXml(toastXmlString);
+
+        // Create the toast notification
+        ToastNotification toast = new ToastNotification(toastXml);
+
+        // Show the toast notification
+        ToastNotificationManager.CreateToastNotifier().Show(toast);
     }
 
     #region Drawing Methods
