@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:NanoFlow.Views.Dialog"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Save G-Code"
+    Title="3D printer settigs"
     CloseButtonText="Cancel"
     DefaultButton="Primary"
     IsPrimaryButtonEnabled="{x:Bind _viewModel.GCodeSettings.CanSave, Mode=OneWay}"
@@ -14,66 +14,54 @@
 
     <StackPanel Spacing="16">
         <TextBox
-            Width="300"
-            PlaceholderText="Enter a name or the g-code commands (e.g., Mycomands)"
+            PlaceholderText="Enter a name or the gcode commands (e.g., Mycomands)"
             Text="{x:Bind _viewModel.GCodeSettings.FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <ComboBox
-            Width="300"
             ItemsSource="{x:Bind _viewModel.GCodeSettings.PrinterModels}"
             PlaceholderText="Select Printer Model"
             SelectedItem="{x:Bind _viewModel.GCodeSettings.SelectedPrinterModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <ComboBox
-            Width="300"
             ItemsSource="{x:Bind _viewModel.GCodeSettings.FilamentTypes}"
             PlaceholderText="Select Filament Type"
             SelectedItem="{x:Bind _viewModel.GCodeSettings.SelectedFilament, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <ComboBox
-            Width="300"
             ItemsSource="{x:Bind _viewModel.GCodeSettings.NozzleSizes}"
             PlaceholderText="Select Nozzle Size (mm)"
             SelectedItem="{x:Bind _viewModel.GCodeSettings.SelectedNozzleSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBox
-            Width="300"
             PlaceholderText="Layer Height (mm, e.g., 0.2)"
             Text="{x:Bind _viewModel.GCodeSettings.LayerHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBox
-            Width="300"
             PlaceholderText="Extruder Temperature (°C, e.g., 200)"
             Text="{x:Bind _viewModel.GCodeSettings.ExtruderTemp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBox
-            Width="300"
             PlaceholderText="Bed Temperature (°C, e.g., 60)"
             Text="{x:Bind _viewModel.GCodeSettings.BedTemp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBox
-            Width="300"
             PlaceholderText="Retraction (mm, e.g., 5.0)"
             Text="{x:Bind _viewModel.GCodeSettings.Retraction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBox
-            Width="300"
             PlaceholderText="Print Speed (mm/s, e.g., 50)"
             Text="{x:Bind _viewModel.GCodeSettings.PrintSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
+        
         <ComboBox
-            Width="300"
             ItemsSource="{x:Bind _viewModel.GCodeSettings.BedLevelingOptions}"
             PlaceholderText="Select Bed Leveling Option"
             SelectedItem="{x:Bind _viewModel.GCodeSettings.SelectedBedLeveling, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBox
-            Width="300"
             PlaceholderText="Cooling Speed (% e.g., 100)"
             Text="{x:Bind _viewModel.GCodeSettings.CoolingSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBox
-            Width="300"
             PlaceholderText="Extrusion Length (mm, e.g., 100)"
             Text="{x:Bind _viewModel.GCodeSettings.ExtrusionLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </StackPanel>

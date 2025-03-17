@@ -1,26 +1,19 @@
-﻿using Windows.Data.Xml.Dom;
-using Windows.UI.Notifications;
-
-namespace NanoFlow.ViewModels;
+﻿namespace NanoFlow.ViewModels;
 
 public partial class MainViewModel : ObservableObject {
 
     #region variables and constants
-    private const string NanoFlowFolder = "NanoFlow";
 
-    private const int gridSpacing = 20; // Spacing between grid lines in pixels
-
-    private readonly int _canvasSize = 378; // Size of the canvas in pixels
 
     private bool _areGridMarginsAdded = false;
-
-    private readonly List<Line> _gridMarginLines = []; // To track grid lines
-
-    private readonly List<TextBlock> _gridTextBlocks = [];
 
     private Grid? _rootContainer;
     private Canvas? _canvas;
     private PointModel? _previousPoint;
+
+    private readonly List<Line> _gridMarginLines = [];
+
+    private readonly List<TextBlock> _gridTextBlocks = [];
 
     public ObservableCollection<PointModel> Points = [];
 
@@ -29,6 +22,7 @@ public partial class MainViewModel : ObservableObject {
     public List<Tuple<PointModel, PointModel>> LineData = [];
 
     public List<PointModel> _selectedPoints = [];
+    private object constants;
     #endregion
     public void SetRootContainer(object sender, RoutedEventArgs args) {
         _rootContainer = sender as Grid;
@@ -163,11 +157,11 @@ public partial class MainViewModel : ObservableObject {
             Height = 600
         };
 
-        for(int i = 0; i < _canvas!.Width; i += gridSpacing) {
-            for(int j = 0; j < _canvas.Height; j += gridSpacing) {
+        for(int i = 0; i < _canvas!.Width; i += Constants.gridSpacing) {
+            for(int j = 0; j < _canvas.Height; j += Constants.gridSpacing) {
                 var point = new PointModel(i, j);
                 var checkBox = new CheckBox {
-                    Content = $"Point ({point.X / gridSpacing},{point.Y / gridSpacing})",
+                    Content = $"Point ({point.X / Constants.gridSpacing},{point.Y / Constants.gridSpacing})",
                     IsChecked = false, // Default to unchecked                    
                     Tag = point,
                 };
@@ -182,8 +176,8 @@ public partial class MainViewModel : ObservableObject {
         if(response == ContentDialogResult.Primary) {
             if(_selectedPoints.Count > 1) {
                 for(int i = 0; i < _selectedPoints.Count - 1; i++) {
-                    var startPoint = new PointModel(_selectedPoints[i].X * gridSpacing, _selectedPoints[i].Y * gridSpacing);
-                    var endPoint = new PointModel(_selectedPoints[i + 1].X * gridSpacing, _selectedPoints[i + 1].Y * gridSpacing);
+                    var startPoint = new PointModel(_selectedPoints[i].X * Constants.gridSpacing, _selectedPoints[i].Y * Constants.gridSpacing);
+                    var endPoint = new PointModel(_selectedPoints[i + 1].X * Constants.gridSpacing, _selectedPoints[i + 1].Y * Constants.gridSpacing);
                     DrawLine(startPoint, endPoint);
                     RemoveGridMarginsAndTextBlocks();
                 }
@@ -267,7 +261,7 @@ public partial class MainViewModel : ObservableObject {
         }
 
         var desinsFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), NanoFlowFolder);
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.NanoFlowFolder);
 
         if(!Directory.Exists(desinsFolder)) {
             Directory.CreateDirectory(desinsFolder);
@@ -358,7 +352,9 @@ public partial class MainViewModel : ObservableObject {
         gcodeContent.WriteLine("M84 ; Disable motors");
 
         // Save the generated G-code to a file
-        var designsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), NanoFlowFolder);
+        var designsFolder = Path.Combine(Environment.GetFolderPath(
+            Environment.SpecialFolder.MyDocuments), Constants.NanoFlowFolder);
+
         if(!Directory.Exists(designsFolder)) {
             Directory.CreateDirectory(designsFolder);
         }
@@ -407,7 +403,7 @@ public partial class MainViewModel : ObservableObject {
         toastXml.LoadXml(toastXmlString);
 
         // Create the toast notification
-        ToastNotification toast = new ToastNotification(toastXml);
+        ToastNotification toast = new(toastXml);
 
         // Show the toast notification
         ToastNotificationManager.CreateToastNotifier().Show(toast);
@@ -418,8 +414,8 @@ public partial class MainViewModel : ObservableObject {
 
         _canvas = new Canvas {
             Background = new SolidColorBrush(Color.FromArgb(255, 0, 128, 0)),
-            Width = _canvasSize,
-            Height = _canvasSize,
+            Width = Constants._canvasSize,
+            Height = Constants._canvasSize,
         };
 
         if(_rootContainer != null) {
@@ -433,8 +429,8 @@ public partial class MainViewModel : ObservableObject {
             return;
         }
 
-        for(int i = 0; i < _canvas!.Width; i += gridSpacing) {
-            for(int j = 0; j < _canvas.Height; j += gridSpacing) {
+        for(int i = 0; i < _canvas!.Width; i += Constants.gridSpacing) {
+            for(int j = 0; j < _canvas.Height; j += Constants.gridSpacing) {
                 // Draw vertical and horizontal lines crossing at intersections
                 if(i == 0) {
                     var horizontalLine = new Line {
@@ -464,7 +460,7 @@ public partial class MainViewModel : ObservableObject {
 
                 // Add a TextBlock at each intersection
                 var textBlock = new TextBlock {
-                    Text = $"({i / gridSpacing},{j / gridSpacing})",
+                    Text = $"({i / Constants.gridSpacing},{j / Constants.gridSpacing})",
                     Foreground = new SolidColorBrush(Colors.Black),
                     FontSize = 8
                 };
@@ -531,7 +527,7 @@ public partial class MainViewModel : ObservableObject {
     private void GuidCheckBox_CheckedChanged(object sender, RoutedEventArgs e) {
         var checkBox = sender as CheckBox;
         if(checkBox?.Tag is PointModel point) {
-            var correctedPoint = new PointModel(point.X / gridSpacing, point.Y / gridSpacing);
+            var correctedPoint = new PointModel(point.X / Constants.gridSpacing, point.Y / Constants.gridSpacing);
             if(checkBox!.IsChecked == true) {
                 _selectedPoints.Add(correctedPoint);
             }

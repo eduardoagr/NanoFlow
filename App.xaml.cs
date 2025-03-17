@@ -5,15 +5,15 @@ namespace NanoFlow {
 
         public static ServiceProvider? Services { get; private set; }
 
-        private const string SyncfusionLicense = "MzczMDcxNEAzMjM4MmUzMDJlMzBrV3dmVEhRTFFJRmtZRGZUdzRqeEJmN3lOcU5wUkwzb2tBRnRuOVNyOHJzPQ==";
-
         public App() {
 
-            SyncfusionLicenseProvider.RegisterLicense(SyncfusionLicense);
+            SyncfusionLicenseProvider.RegisterLicense(Constants.SyncfusionLicenseKey);
 
             var services = new ServiceCollection();
 
             services.AddSingleton<MainViewModel>();
+
+            services.AddTransient<NotificationHelper>();
 
             services.AddTransient(p =>
                                  new MainWindow(

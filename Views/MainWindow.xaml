@@ -19,8 +19,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ribbon:SfRibbon
-            ShowBackstageMenuButton="False">
+        <ribbon:SfRibbon ShowBackstageMenuButton="False">
             <ribbon:SfRibbon.Tabs>
                 <ribbon:RibbonTab Header="File">
                     <ribbon:RibbonGroup Header="Desings">

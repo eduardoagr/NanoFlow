@@ -1,6 +1,6 @@
-﻿namespace NanoFlow.ViewModels {
-    public class GcodeDialogViewModel {
+﻿namespace NanoFlow.ViewModels; 
 
-        public GCodeModel GCodeSettings { get; set; } = new();
-    }
+public class GcodeDialogViewModel {
+
+    public GCodeModel GCodeSettings { get; set; } = new();
 }
