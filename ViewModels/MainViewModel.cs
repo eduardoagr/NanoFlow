@@ -64,7 +64,7 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog, Notification
             var textBox = stackPanel.Children.OfType<TextBox>().First();
             var fileName = textBox.Text;
 
-            // Validate the file name
+
             if(string.IsNullOrWhiteSpace(fileName)) {
                 // Use a default file name if none is provided
                 fileName = "MyDesign.stl";
