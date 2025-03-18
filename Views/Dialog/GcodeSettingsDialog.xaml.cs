@@ -7,6 +7,7 @@ namespace NanoFlow.Views.Dialog {
         public GcodeSettingsDialog(GcodeDialogViewModel viewModel) {
             InitializeComponent();
             _viewModel = viewModel;
+            DataContext = viewModel;
         }
     }
 }

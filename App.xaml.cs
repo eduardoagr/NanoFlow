@@ -13,7 +13,12 @@ namespace NanoFlow {
 
             services.AddSingleton<MainViewModel>();
 
-            services.AddTransient<NotificationHelper>();
+            services.AddSingleton<NotificationHelper>();
+
+            services.AddSingleton<GcodeDialogViewModel>();
+
+            services.AddTransient(p =>
+                                new GcodeSettingsDialog(p.GetRequiredService<GcodeDialogViewModel>()));
 
             services.AddTransient(p =>
                                  new MainWindow(

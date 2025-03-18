@@ -1,15 +1,15 @@
 ﻿namespace NanoFlow.ViewModels;
 
-public partial class MainViewModel : ObservableObject {
+public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : ObservableObject {
 
     #region variables and constants
-
 
     private bool _areGridMarginsAdded = false;
 
     private Grid? _rootContainer;
     private Canvas? _canvas;
     private PointModel? _previousPoint;
+    private DrawingHelper? _drawingHelper;
 
     private readonly List<Line> _gridMarginLines = [];
 
@@ -22,36 +22,45 @@ public partial class MainViewModel : ObservableObject {
     public List<Tuple<PointModel, PointModel>> LineData = [];
 
     public List<PointModel> _selectedPoints = [];
-    private object constants;
+
     #endregion
+
     public void SetRootContainer(object sender, RoutedEventArgs args) {
         _rootContainer = sender as Grid;
+
+        Init();
+    }
+
+    private void Init() {
+
+        _drawingHelper = new(_canvas,
+            _rootContainer, _gridMarginLines,
+            _gridTextBlocks, _selectedPoints, Lines);
     }
 
     #region Relay commands
     [RelayCommand]
     async Task SaveToSTLAsync() {
-        // Create the dialog
-        var fileNameDialog = new ContentDialog {
-            Title = "Save Design",
-            Content = new StackPanel {
-                Children =
-                {
-                    new TextBlock { Text = "Enter a name for your design:" },
-                    new TextBox { PlaceholderText = "MyDesign", Name = "FileNameTextBox" }
-                }
-            },
-            PrimaryButtonText = "Save",
-            CloseButtonText = "Cancel",
-            XamlRoot = _rootContainer?.XamlRoot
+
+        // Define the content of the dialog
+        var stackPanel = new StackPanel {
+            Children = {
+                new TextBlock { Text = "Enter a name for your design:" },
+                new TextBox { PlaceholderText = "MyDesign", Name = "FileNameTextBox"}
+            }
         };
 
-        // Show the dialog
-        var result = await fileNameDialog.ShowAsync();
+        // Use the DialogHelper to show the dialog
+        var result = await DialogHelper.ShowDialogAsync(
+            "Save Design",
+            stackPanel,
+            "Save",
+             "Cancel",
+            _rootContainer?.XamlRoot
+        );
 
         if(result == ContentDialogResult.Primary) {
-            // Retrieve the TextBox value
-            var stackPanel = (StackPanel)fileNameDialog.Content;
+
             var textBox = stackPanel.Children.OfType<TextBox>().First();
             var fileName = textBox.Text;
 
@@ -65,9 +74,10 @@ public partial class MainViewModel : ObservableObject {
                 fileName += ".stl";
             }
 
-            // Generate the STL file
-            GetLineData(); // Ensure LineData is updated
-            Toast(fileName);
+            GetLineData();
+
+            Toast(Path.GetFileNameWithoutExtension(fileName));
+
             ExportSTL(fileName, 5.0);
         }
     }
@@ -75,51 +85,45 @@ public partial class MainViewModel : ObservableObject {
     [RelayCommand]
     async Task SaveGcodeAsync() {
 
-        var viewModel = new GcodeDialogViewModel(); // Create the ViewModel for the dialog Set the DataContext
-
-        var gcodeDialog = new GcodeSettingsDialog(viewModel) {
-
-            XamlRoot = _rootContainer!.XamlRoot
-        };
+        gcodeDialog.XamlRoot = _rootContainer!.XamlRoot;
 
         var result = await gcodeDialog.ShowAsync();
 
         if(result == ContentDialogResult.Primary) {
+            // Access the ViewModel directly from the dialog
 
-            double selectedNozzleSize = double.Parse(viewModel.GCodeSettings.SelectedNozzleSize);
+            if(gcodeDialog.DataContext is GcodeDialogViewModel gcodeDialogViewModel) {
+                double selectedNozzleSize = double.Parse(gcodeDialogViewModel.GCodeSettings.SelectedNozzleSize);
+                double nozzleArea = Math.PI * Math.Pow(selectedNozzleSize / 2, 2);
 
-            double nozzleArea = Math.PI * Math.Pow(selectedNozzleSize / 2, 2);
+                var fileName = gcodeDialogViewModel.GCodeSettings.FileName;
+                GetLineData();
 
-            // Retrieve the values from the ViewModel
-            var fileName = viewModel.GCodeSettings.FileName;
-            var printerModel = viewModel.GCodeSettings.SelectedPrinterModel;
-            var filamentType = viewModel.GCodeSettings.SelectedFilament;
-            var nozzleSize = viewModel.GCodeSettings.SelectedNozzleSize;
-            var layerHeight = viewModel.GCodeSettings.LayerHeight;
-            var extruderTemp = viewModel.GCodeSettings.ExtruderTemp;
-            var bedTemp = viewModel.GCodeSettings.BedTemp;
-            var retraction = viewModel.GCodeSettings.Retraction;
-            var printSpeed = viewModel.GCodeSettings.PrintSpeed;
-            var bedLeveling = viewModel.GCodeSettings.SelectedBedLeveling;
-            var coolingSpeed = viewModel.GCodeSettings.CoolingSpeed;
+                ExportToGcode(
+                    fileName,
+                    gcodeDialogViewModel.GCodeSettings.SelectedPrinterModel,
+                    gcodeDialogViewModel.GCodeSettings.SelectedFilament,
+                    gcodeDialogViewModel.GCodeSettings.SelectedNozzleSize,
+                    gcodeDialogViewModel.GCodeSettings.LayerHeight,
+                    gcodeDialogViewModel.GCodeSettings.ExtruderTemp,
+                    gcodeDialogViewModel.GCodeSettings.BedTemp,
+                    gcodeDialogViewModel.GCodeSettings.Retraction,
+                    gcodeDialogViewModel.GCodeSettings.PrintSpeed,
+                    gcodeDialogViewModel.GCodeSettings.SelectedBedLeveling,
+                    gcodeDialogViewModel.GCodeSettings.CoolingSpeed,
+                    nozzleArea * gcodeDialogViewModel.GCodeSettings.ExtrusionLengthExtended
+                );
 
-            var extrusionLength = viewModel.GCodeSettings.ExtrusionLengthExtended; // Placeholder value, should be adjusted dynamically based on movement
-            var extruderAmount = nozzleArea * extrusionLength;
-
-            GetLineData(); // Ensure LineData is updated
-
-            // Assuming you already have a method for saving G-code with these parameters:
-            ExportToGcode(fileName, printerModel, filamentType, nozzleSize, layerHeight,
-                extruderTemp, bedTemp, retraction, printSpeed, bedLeveling, coolingSpeed, extruderAmount);
-
-            Toast(fileName);
+                Toast(Path.GetFileNameWithoutExtension(fileName));
+            }
         }
+
     }
 
     [RelayCommand]
     void CreateNewDesign() {
 
-        DrawCanvas();
+        _canvas = _drawingHelper!.CreateCanva();
 
         if(_canvas != null) {
             _canvas!.PointerPressed += Canvas_PointerPressed;
@@ -130,28 +134,16 @@ public partial class MainViewModel : ObservableObject {
         Points.Clear();
         Lines.Clear();
         LineData.Clear();
+        _selectedPoints.Clear();
     }
 
     [RelayCommand]
     async Task GuidedProcessAsync() {
 
         Points.Clear();
-        DrawCanvas();
-        DrawGridMarginsAndTextBlocks();
+        _canvas = _drawingHelper!.CreateCanva();
+        _drawingHelper.DrawGridMarginsAndTextBlocks();
 
-        // Add labels at the intersection points 
-        ContentDialog dlg = new() {
-            XamlRoot = _rootContainer!.XamlRoot,
-            Title = "Select point to draw",
-            PrimaryButtonText = "Ok",
-            MinHeight = 400,
-            MinWidth = 400,
-            Height = 600,
-            Width = 400,
-            MaxHeight = 800,
-            MaxWidth = 600
-
-        };
         GridView gridView = new() {
             Width = 400,
             Height = 600
@@ -170,16 +162,20 @@ public partial class MainViewModel : ObservableObject {
                 gridView.Items.Add(checkBox);
             }
         }
-        dlg.Content = gridView;
-        var response = await dlg.ShowAsync();
+
+        var response = await DialogHelper.ShowDialogAsync
+            ("Select point to draw",
+            gridView, "OK", null,
+            _rootContainer!.XamlRoot, 400, 400, 600,
+            400, 800, 600);
 
         if(response == ContentDialogResult.Primary) {
             if(_selectedPoints.Count > 1) {
                 for(int i = 0; i < _selectedPoints.Count - 1; i++) {
                     var startPoint = new PointModel(_selectedPoints[i].X * Constants.gridSpacing, _selectedPoints[i].Y * Constants.gridSpacing);
                     var endPoint = new PointModel(_selectedPoints[i + 1].X * Constants.gridSpacing, _selectedPoints[i + 1].Y * Constants.gridSpacing);
-                    DrawLine(startPoint, endPoint);
-                    RemoveGridMarginsAndTextBlocks();
+                    _drawingHelper.DrawLine(startPoint, endPoint);
+                    _drawingHelper!.RemoveGridMarginsAndTextBlocks();
                 }
             }
         }
@@ -192,32 +188,16 @@ public partial class MainViewModel : ObservableObject {
         }
 
         if(_areGridMarginsAdded) {
-            RemoveGridMarginsAndTextBlocks();
+            _drawingHelper!.RemoveGridMarginsAndTextBlocks();
             _areGridMarginsAdded = false;
         }
         else {
-            DrawGridMarginsAndTextBlocks();
+            _drawingHelper!.DrawGridMarginsAndTextBlocks();
             _areGridMarginsAdded = true;
         }
 
     }
     #endregion
-
-
-
-    private void RemoveGridMarginsAndTextBlocks() {
-        var allItems = _gridMarginLines.Cast<UIElement>()
-             .Concat(_gridTextBlocks.Cast<UIElement>())
-             .ToList();
-
-        foreach(var element in allItems) {
-            _canvas!.Children.Remove(element);
-        }
-
-        // Clear both lists afterward
-        _gridMarginLines.Clear();
-        _gridTextBlocks.Clear();
-    }
 
     public List<Tuple<PointModel, PointModel>> GetLineData() {
 
@@ -261,7 +241,8 @@ public partial class MainViewModel : ObservableObject {
         }
 
         var desinsFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.NanoFlowFolder);
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            Constants.NanoFlowFolder);
 
         if(!Directory.Exists(desinsFolder)) {
             Directory.CreateDirectory(desinsFolder);
@@ -362,7 +343,6 @@ public partial class MainViewModel : ObservableObject {
         var gcodeFilePath = Path.Combine(designsFolder, fileName);
         File.WriteAllText(gcodeFilePath, gcodeContent.ToString());
 
-        Toast(fileName);
     }
 
 
@@ -409,118 +389,6 @@ public partial class MainViewModel : ObservableObject {
         ToastNotificationManager.CreateToastNotifier().Show(toast);
     }
 
-    #region Drawing Methods
-    private void DrawCanvas() {
-
-        _canvas = new Canvas {
-            Background = new SolidColorBrush(Color.FromArgb(255, 0, 128, 0)),
-            Width = Constants._canvasSize,
-            Height = Constants._canvasSize,
-        };
-
-        if(_rootContainer != null) {
-            _rootContainer.Children.Add(_canvas);
-            Grid.SetRow(_canvas, 1);
-        }
-    }
-
-    private void DrawGridMarginsAndTextBlocks() {
-        if(_canvas == null) {
-            return;
-        }
-
-        for(int i = 0; i < _canvas!.Width; i += Constants.gridSpacing) {
-            for(int j = 0; j < _canvas.Height; j += Constants.gridSpacing) {
-                // Draw vertical and horizontal lines crossing at intersections
-                if(i == 0) {
-                    var horizontalLine = new Line {
-                        X1 = 0,
-                        Y1 = j,
-                        X2 = _canvas.Width,
-                        Y2 = j,
-                        Stroke = new SolidColorBrush(Colors.Gray),
-                        StrokeThickness = 1
-                    };
-                    _canvas.Children.Add(horizontalLine);
-                    _gridMarginLines.Add(horizontalLine);
-                }
-
-                if(j == 0) {
-                    var verticalLine = new Line {
-                        X1 = i,
-                        Y1 = 0,
-                        X2 = i,
-                        Y2 = _canvas.Height,
-                        Stroke = new SolidColorBrush(Colors.Gray),
-                        StrokeThickness = 1
-                    };
-                    _canvas.Children.Add(verticalLine);
-                    _gridMarginLines.Add(verticalLine);
-                }
-
-                // Add a TextBlock at each intersection
-                var textBlock = new TextBlock {
-                    Text = $"({i / Constants.gridSpacing},{j / Constants.gridSpacing})",
-                    Foreground = new SolidColorBrush(Colors.Black),
-                    FontSize = 8
-                };
-                Canvas.SetLeft(textBlock, i + 2); // Position slightly offset for visibility
-                Canvas.SetTop(textBlock, j + 2);
-
-                _canvas.Children.Add(textBlock);
-                _gridTextBlocks.Add(textBlock);
-            }
-        }
-    }
-
-    private void DrawLine(PointModel startPoint, PointModel endPoint) {
-        var line = new Line {
-            X1 = startPoint.X,
-            Y1 = startPoint.Y,
-            X2 = endPoint.X,
-            Y2 = endPoint.Y,
-            Stroke = new SolidColorBrush(Colors.White),
-            StrokeThickness = 2,
-        };
-        _canvas!.Children.Add(line);
-
-        Lines.Add(new LineModel(startPoint, endPoint));
-    }
-
-    private void DrawPoint(PointModel point) {
-
-        if(_selectedPoints.Contains(point)) {
-
-            var toRemove = _canvas!.Children.OfType<Ellipse>().FirstOrDefault(e => e.Tag == point);
-            if(toRemove != null) {
-                _canvas.Children.Remove(toRemove);
-            }
-
-            // Remove the point from the selected points list
-            _selectedPoints.Remove(point);
-        }
-        else {
-
-            var ellipse = new Ellipse {
-                Width = 4,
-                Height = 4,
-                Fill = new SolidColorBrush(Colors.Red)
-            };
-            Canvas.SetLeft(ellipse, point.X - 2);
-            Canvas.SetTop(ellipse, point.Y - 2);
-            _canvas!.Children.Add(ellipse);
-
-            // Connect with the previous point if one exists
-            if(_selectedPoints.Count > 0) {
-                var lastPoint = _selectedPoints[^1];
-                DrawLine(lastPoint, point);
-            }
-
-            _selectedPoints.Add(point);
-        }
-    }
-
-    #endregion
 
     #region UI Event Handlers
 
@@ -547,7 +415,7 @@ public partial class MainViewModel : ObservableObject {
         _previousPoint = currentPoint;
 
         // Trigger the action to draw the point
-        DrawPoint(currentPoint);
+        _drawingHelper!.DrawPoint(currentPoint);
     }
 
     private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
@@ -558,7 +426,7 @@ public partial class MainViewModel : ObservableObject {
             var currentPoint = new PointModel((int)position.X, (int)position.Y);
 
             // Draw a line between the points
-            DrawLine(_previousPoint, currentPoint);
+            _drawingHelper!.DrawLine(_previousPoint, currentPoint);
 
             // Update the previous point
             _previousPoint = currentPoint;
@@ -570,5 +438,5 @@ public partial class MainViewModel : ObservableObject {
         _previousPoint = null;
     }
 
-    #endregion
+    #endregion End o UI
 }
