@@ -3,7 +3,7 @@ namespace NanoFlow.Helpers;
 
 public class NotificationHelper {
 
-    public void LaunchToastNotification(string filename, string filepath) {
+    public void LaunchToastNotification(string filepath) {
 
         ToastNotificationManagerCompat.OnActivated +=
             toastArgs => {
@@ -12,17 +12,14 @@ public class NotificationHelper {
                     toastArgs.Argument);
 
                 if(arguments.TryGetValue("action", out string action)) {
-                    HandleToastButtonAction(action, filename);
+                    HandleToastButtonAction(action, filepath);
                 }
-
-                // Handle the toast button action
-                HandleToastButtonAction(action, filename);
             };
 
-        Toast(filename, filepath);
+        Toast(Path.GetFileName(filepath), filepath);
     }
 
-    private void HandleToastButtonAction(string action, string filename) {
+    private void HandleToastButtonAction(string action, string filepath) {
         switch(action) {
 
             case "openFile":
@@ -30,7 +27,8 @@ public class NotificationHelper {
 
             case
                 "openFolder":
-                OpenFolder(Path.GetFullPath(filename));
+                Debug.WriteLine("Open Folder button clicked.");
+                OpenFolder(filepath);
                 break;
             default:
                 break;
@@ -38,10 +36,7 @@ public class NotificationHelper {
     }
 
     private void OpenFolder(string path) {
-        if(!Directory.Exists(path)) {
-            return;
-        }
-        Process.Start("explorer.exe", $"/select,\"{path}\"");
+        Process.Start(Constants.explorer, $"/select,\"{path}\"");
     }
 
     // Display the toast notification

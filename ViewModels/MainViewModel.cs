@@ -1,11 +1,11 @@
 ﻿namespace NanoFlow.ViewModels;
 
-public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : ObservableObject {
+public partial class MainViewModel(GcodeSettingsDialog gcodeDialog, NotificationHelper notificationHelper)
+    : ObservableObject {
 
     #region variables and constants
 
     private bool _areGridMarginsAdded = false;
-
     private Grid? _rootContainer;
     private Canvas? _canvas;
     private PointModel? _previousPoint;
@@ -52,10 +52,10 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
 
         // Use the DialogHelper to show the dialog
         var result = await DialogHelper.ShowDialogAsync(
-            "Save Design",
+            Constants.saveDesign,
             stackPanel,
-            "Save",
-             "Cancel",
+            Constants.save,
+             Constants.cancel,
             _rootContainer?.XamlRoot
         );
 
@@ -69,16 +69,18 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
                 // Use a default file name if none is provided
                 fileName = "MyDesign.stl";
             }
-            else if(!fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) {
+
+            else if(!fileName.EndsWith(Constants.stl, StringComparison.OrdinalIgnoreCase)) {
                 // Append the ".stl" extension if it's missing
-                fileName += ".stl";
+                fileName += Constants.stl;
             }
 
             GetLineData();
 
-            Toast(Path.GetFileNameWithoutExtension(fileName));
+            var StlPath = ExportSTL(fileName, 5.0);
 
-            ExportSTL(fileName, 5.0);
+            notificationHelper.LaunchToastNotification(StlPath);
+
         }
     }
 
@@ -97,6 +99,12 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
                 double nozzleArea = Math.PI * Math.Pow(selectedNozzleSize / 2, 2);
 
                 var fileName = gcodeDialogViewModel.GCodeSettings.FileName;
+
+                if(!fileName.EndsWith(Constants.gcode, StringComparison.OrdinalIgnoreCase)) {
+                    // Append the ".stl" extension if it's missing
+                    fileName += Constants.gcode;
+                }
+
                 GetLineData();
 
                 ExportToGcode(
@@ -112,9 +120,9 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
                     gcodeDialogViewModel.GCodeSettings.SelectedBedLeveling,
                     gcodeDialogViewModel.GCodeSettings.CoolingSpeed,
                     nozzleArea * gcodeDialogViewModel.GCodeSettings.ExtrusionLengthExtended
-                );
 
-                Toast(Path.GetFileNameWithoutExtension(fileName));
+
+                );
             }
         }
 
@@ -164,8 +172,8 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
         }
 
         var response = await DialogHelper.ShowDialogAsync
-            ("Select point to draw",
-            gridView, "OK", null,
+            (Constants.pointsSeletion,
+            gridView, Constants.ok, null,
             _rootContainer!.XamlRoot, 400, 400, 600,
             400, 800, 600);
 
@@ -230,7 +238,7 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
         return extrudedLines;
     }
 
-    public void ExportSTL(string filePath, double thickness) {
+    public string ExportSTL(string filename, double thickness) {
 
         GetLineData();
         var extrudedLines = Generate3DLines(thickness);
@@ -240,15 +248,7 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
             throw new InvalidOperationException("No 3D geometry created. Check the logic in Generate3DLines.");
         }
 
-        var desinsFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-            Constants.NanoFlowFolder);
-
-        if(!Directory.Exists(desinsFolder)) {
-            Directory.CreateDirectory(desinsFolder);
-        }
-
-        var stlFilePath = Path.Combine(desinsFolder, filePath);
+        var stlFilePath = FilePathManager.GetFilePath(filename);
 
         var stlContent = new StringWriter(CultureInfo.InvariantCulture);
         stlContent.WriteLine("solid Model");
@@ -267,6 +267,8 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
         stlContent.WriteLine("endsolid Model");
 
         File.WriteAllText(stlFilePath, stlContent.ToString());
+
+        return stlFilePath;
     }
 
     public void ExportToGcode(string fileName, string printerModel,
@@ -333,14 +335,7 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
         gcodeContent.WriteLine("M84 ; Disable motors");
 
         // Save the generated G-code to a file
-        var designsFolder = Path.Combine(Environment.GetFolderPath(
-            Environment.SpecialFolder.MyDocuments), Constants.NanoFlowFolder);
-
-        if(!Directory.Exists(designsFolder)) {
-            Directory.CreateDirectory(designsFolder);
-        }
-
-        var gcodeFilePath = Path.Combine(designsFolder, fileName);
+        var gcodeFilePath = FilePathManager.GetFilePath(fileName);
         File.WriteAllText(gcodeFilePath, gcodeContent.ToString());
 
     }
@@ -364,31 +359,6 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog) : Observable
         stl.WriteLine("    endloop");
         stl.WriteLine("  endfacet");
     }
-
-    private void Toast(string fileName) {
-
-        // Define the toast content as a string
-        string toastXmlString =
-            "<toast>" +
-            "<visual>" +
-            "<binding template='ToastGeneric'>" +
-            $"<text>Success</text>" +
-            $"<text>'{fileName}' saved successfully.</text>" +
-            "</binding>" +
-            "</visual>" +
-            "</toast>";
-
-        // Create an XML document for the toast content
-        XmlDocument toastXml = new();
-        toastXml.LoadXml(toastXmlString);
-
-        // Create the toast notification
-        ToastNotification toast = new(toastXml);
-
-        // Show the toast notification
-        ToastNotificationManager.CreateToastNotifier().Show(toast);
-    }
-
 
     #region UI Event Handlers
 

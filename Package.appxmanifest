@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
-<Package
+﻿<Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  IgnorableNamespaces="uap rescap com desktop">
 
   <Identity
     Name="60e76d8f-7d06-41f2-902f-a4fc9bc9b2ff"
@@ -42,6 +42,23 @@
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+
+      <Extensions>
+        <!-- Specify the CLSID to activate when the toast is clicked -->
+        <desktop:Extension Category="windows.toastNotificationActivation">
+          <desktop:ToastNotificationActivation ToastActivatorCLSID="38FAED81-9C2F-4122-9504-1847B479675A" />
+        </desktop:Extension>
+
+        <!-- Register COM CLSID LocalServer32 registry key -->
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="NanoFlow.exe" Arguments="-ToastActivated" DisplayName="Toast activator">
+              <com:Class Id="38FAED81-9C2F-4122-9504-1847B479675A" DisplayName="Toast activator"/>
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+      </Extensions>
+
     </Application>
   </Applications>
 
