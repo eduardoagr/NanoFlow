@@ -32,7 +32,6 @@ namespace NanoFlow {
         protected override void OnLaunched(LaunchActivatedEventArgs args) {
 
             var window = Services!.GetRequiredService<MainWindow>();
-            window.Activate();
 
             var hwnd = WindowNative.GetWindowHandle(window);
             var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
@@ -40,6 +39,8 @@ namespace NanoFlow {
 
             var presenter = appWindow.Presenter as OverlappedPresenter;
             presenter?.Maximize();
+
+            window.Activate();
         }
     }
 }

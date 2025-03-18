@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.22000.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>NanoFlow</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -17,11 +17,9 @@
     <None Remove="Views\Dialog\GcodeSettingsDialog.xaml" />
     <None Remove="Views\MainWindow.xaml" />
   </ItemGroup>
-
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
-
   <!--
     Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK Nuget
@@ -53,7 +51,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-
   <!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
     Explorer "Package and Publish" context menu entry to be enabled for this project even if
@@ -62,7 +59,6 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
-
   <!-- Publish Properties -->
   <PropertyGroup>
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
