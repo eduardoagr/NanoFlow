@@ -11,11 +11,13 @@ global using Microsoft.UI.Xaml.Input;
 global using Microsoft.UI.Xaml.Media;
 global using Microsoft.UI.Xaml.Shapes;
 
+global using NanoFlow.Controls;
 global using NanoFlow.Helpers;
+global using NanoFlow.Interfaces;
 global using NanoFlow.Model;
 global using NanoFlow.ViewModels;
 global using NanoFlow.Views;
-global using NanoFlow.Views.Dialog;
+global using NanoFlow.Views.Dialogs;
 
 global using Syncfusion.Licensing;
 
@@ -28,9 +30,7 @@ global using System.IO;
 global using System.Linq;
 global using System.Threading.Tasks;
 
-global using Windows.Data.Xml.Dom;
 global using Windows.UI;
-global using Windows.UI.Notifications;
 
 global using WinRT.Interop;
 

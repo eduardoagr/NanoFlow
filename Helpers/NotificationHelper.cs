@@ -1,5 +1,4 @@
-﻿
-namespace NanoFlow.Helpers;
+﻿namespace NanoFlow.Helpers;
 
 public class NotificationHelper {
 

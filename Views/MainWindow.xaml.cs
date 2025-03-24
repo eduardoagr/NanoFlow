@@ -1,17 +1,16 @@
-namespace NanoFlow.Views {
+namespace NanoFlow.Views;
 
-    public sealed partial class MainWindow : Window {
+public sealed partial class MainWindow : Window {
 
-        public MainViewModel? ViewModel { get; set; }
+    public MainViewModel? ViewModel { get; set; }
 
-        public MainWindow(MainViewModel mainViewModel) {
+    public MainWindow(MainViewModel mainViewModel) {
 
-            InitializeComponent();
+        InitializeComponent();
 
-            ViewModel = mainViewModel;
+        ViewModel = mainViewModel;
 
-            SetRootContainer.DataContext = ViewModel;
+        rootContainer.DataContext = ViewModel;
 
-        }
     }
 }

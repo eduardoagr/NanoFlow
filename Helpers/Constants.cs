@@ -2,9 +2,11 @@
 
 public class Constants {
 
-    public const string SyncfusionLicenseKey = "MzczMDcxNEAzMjM4MmUzMDJlMzBrV3dmVEhRTFFJRmtZRGZUdzRqeEJmN3lOcU5wUkwzb2tBRnRuOVNyOHJzPQ==";
+    public const string syncfusionLicenseKey = "MzczMDcxNEAzMjM4MmUzMDJlMzBrV3dmVEhRTFFJRmtZRGZUdzRqeEJmN3lOcU5wUkwzb2tBRnRuOVNyOHJzPQ==";
 
-    public const string NanoFlowFolder = "NanoFlow";
+    public const string nanoFlowFolder = "NanoFlow";
+
+    public const string appTitle = "NanoFlow";
 
     public const int gridSpacing = 20;
 
@@ -23,10 +25,24 @@ public class Constants {
     public const string save = "Save";
 
     public const string saveDesign = "Save Design";
-    
+
     public const string pointsSeletion = "Select point to draw";
 
-    
+    public const string baseImagePath = "/Assets";
 
+
+    // Folders
+    public const string desktop = "Desktop";
+    public const string documents = "Documents";
+    public const string downloads = "Downloads";
+    public const string gcodeFolder = "Gcode";
+
+    public const string Folder = "folder";
+
+
+    public static string GetImagePath(string name) {
+
+        return $"{baseImagePath}/{name}.png";
+    }
 
 }

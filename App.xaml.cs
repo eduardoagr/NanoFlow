@@ -1,46 +1,56 @@
-﻿
-namespace NanoFlow {
+﻿using NanoFlow.Servies;
 
-    public partial class App : Application {
+namespace NanoFlow;
 
-        public static ServiceProvider? Services { get; private set; }
+public partial class App : Application {
 
-        public App() {
+    public static ServiceProvider? Services { get; private set; }
 
-            SyncfusionLicenseProvider.RegisterLicense(Constants.SyncfusionLicenseKey);
+    public App() {
 
-            var services = new ServiceCollection();
+        SyncfusionLicenseProvider.RegisterLicense(Constants.syncfusionLicenseKey);
 
-            services.AddSingleton<MainViewModel>();
+        var services = new ServiceCollection();
 
-            services.AddSingleton<NotificationHelper>();
+        services.AddSingleton<MainViewModel>();
 
-            services.AddSingleton<GcodeDialogViewModel>();
+        services.AddTransient<FileExplorerWindowViewModel>();
 
-            services.AddTransient(p =>
-                                new GcodeSettingsDialog(p.GetRequiredService<GcodeDialogViewModel>()));
+        services.AddSingleton<NotificationHelper>();
 
-            services.AddTransient(p =>
-                                 new MainWindow(
-                                     p.GetRequiredService<MainViewModel>()));
+        services.AddTransient<GcodeDialogViewModel>();
 
-            Services = services.BuildServiceProvider();
+        services.AddTransient<StlSettingsDialogViewModel>();
 
-            InitializeComponent();
-        }
+        services.AddTransient<IDialogService, DialogService>();
 
-        protected override void OnLaunched(LaunchActivatedEventArgs args) {
+        services.AddTransient(p =>
+                            new StlSettingsDialog(p.GetRequiredService<StlSettingsDialogViewModel>()));
 
-            var window = Services!.GetRequiredService<MainWindow>();
+        services.AddTransient(p =>
+                            new GcodeSettingsDialog(p.GetRequiredService<GcodeDialogViewModel>()));
 
-            var hwnd = WindowNative.GetWindowHandle(window);
-            var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
-            var appWindow = AppWindow.GetFromWindowId(windowId);
+        services.AddTransient(p =>
+                             new MainWindow(
+                                 p.GetRequiredService<MainViewModel>()));
 
-            var presenter = appWindow.Presenter as OverlappedPresenter;
-            presenter?.Maximize();
+        services.AddTransient(p =>
+                             new FileExplorerWindow(
+                                 p.GetRequiredService<FileExplorerWindowViewModel>()));
 
-            window.Activate();
-        }
+        Services = services.BuildServiceProvider();
+
+        InitializeComponent();
+    }
+
+    protected override void OnLaunched(LaunchActivatedEventArgs args) {
+
+        var window = Services!.GetRequiredService<MainWindow>();
+
+        WindowHelper.ConfigureCustomTitleBar(window, Constants.appTitle);
+
+        WindowHelper.MaximizeWindow(window);
+
+        window.Activate();
     }
 }

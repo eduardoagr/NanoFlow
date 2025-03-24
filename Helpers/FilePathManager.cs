@@ -3,7 +3,7 @@ public static class FilePathManager {
 
     private static readonly string DesignsFolder = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-        Constants.NanoFlowFolder);
+        Constants.nanoFlowFolder);
 
     static FilePathManager() {
         // Ensure the Designs folder exists

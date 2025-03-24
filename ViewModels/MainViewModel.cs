@@ -1,7 +1,8 @@
-﻿namespace NanoFlow.ViewModels;
+﻿
 
-public partial class MainViewModel(GcodeSettingsDialog gcodeDialog, NotificationHelper notificationHelper)
-    : ObservableObject {
+namespace NanoFlow.ViewModels;
+
+public partial class MainViewModel(IServiceProvider serviceProvider, IDialogService _dialogService, NotificationHelper notificationHelper) : ObservableObject {
 
     #region variables and constants
 
@@ -39,93 +40,75 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog, Notification
     }
 
     #region Relay commands
+
     [RelayCommand]
     async Task SaveToSTLAsync() {
 
-        // Define the content of the dialog
-        var stackPanel = new StackPanel {
-            Children = {
-                new TextBlock { Text = "Enter a name for your design:" },
-                new TextBox { PlaceholderText = "MyDesign", Name = "FileNameTextBox"}
+        if(_rootContainer is not null) {
+            var viewModel = await _dialogService.ShowStlDialog(_rootContainer.XamlRoot);
+
+            if(viewModel != null) {
+
+                var fileName = viewModel.stlSettigs.Filename;
+
+                if(string.IsNullOrWhiteSpace(fileName)) {
+                    fileName = "MyDesign.stl";
+                }
+                else if(!fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) {
+                    fileName += ".stl";
+                }
+
+                GetLineData();
+
+                var stlPath = ExportSTL(fileName, 5.0);
+
+                notificationHelper.LaunchToastNotification(stlPath);
+
             }
-        };
-
-        // Use the DialogHelper to show the dialog
-        var result = await DialogHelper.ShowDialogAsync(
-            Constants.saveDesign,
-            stackPanel,
-            Constants.save,
-             Constants.cancel,
-            _rootContainer?.XamlRoot
-        );
-
-        if(result == ContentDialogResult.Primary) {
-
-            var textBox = stackPanel.Children.OfType<TextBox>().First();
-            var fileName = textBox.Text;
-
-
-            if(string.IsNullOrWhiteSpace(fileName)) {
-                // Use a default file name if none is provided
-                fileName = "MyDesign.stl";
-            }
-
-            else if(!fileName.EndsWith(Constants.stl, StringComparison.OrdinalIgnoreCase)) {
-                // Append the ".stl" extension if it's missing
-                fileName += Constants.stl;
-            }
-
-            GetLineData();
-
-            var StlPath = ExportSTL(fileName, 5.0);
-
-            notificationHelper.LaunchToastNotification(StlPath);
-
         }
     }
 
     [RelayCommand]
     async Task SaveGcodeAsync() {
 
-        gcodeDialog.XamlRoot = _rootContainer!.XamlRoot;
-
-        var result = await gcodeDialog.ShowAsync();
-
-        if(result == ContentDialogResult.Primary) {
-            // Access the ViewModel directly from the dialog
-
-            if(gcodeDialog.DataContext is GcodeDialogViewModel gcodeDialogViewModel) {
-                double selectedNozzleSize = double.Parse(gcodeDialogViewModel.GCodeSettings.SelectedNozzleSize);
-                double nozzleArea = Math.PI * Math.Pow(selectedNozzleSize / 2, 2);
-
-                var fileName = gcodeDialogViewModel.GCodeSettings.FileName;
-
-                if(!fileName.EndsWith(Constants.gcode, StringComparison.OrdinalIgnoreCase)) {
-                    // Append the ".stl" extension if it's missing
-                    fileName += Constants.gcode;
-                }
-
-                GetLineData();
-
-                ExportToGcode(
-                    fileName,
-                    gcodeDialogViewModel.GCodeSettings.SelectedPrinterModel,
-                    gcodeDialogViewModel.GCodeSettings.SelectedFilament,
-                    gcodeDialogViewModel.GCodeSettings.SelectedNozzleSize,
-                    gcodeDialogViewModel.GCodeSettings.LayerHeight,
-                    gcodeDialogViewModel.GCodeSettings.ExtruderTemp,
-                    gcodeDialogViewModel.GCodeSettings.BedTemp,
-                    gcodeDialogViewModel.GCodeSettings.Retraction,
-                    gcodeDialogViewModel.GCodeSettings.PrintSpeed,
-                    gcodeDialogViewModel.GCodeSettings.SelectedBedLeveling,
-                    gcodeDialogViewModel.GCodeSettings.CoolingSpeed,
-                    nozzleArea * gcodeDialogViewModel.GCodeSettings.ExtrusionLengthExtended
-
-
-                );
-            }
+        if(_rootContainer?.XamlRoot == null) {
+            throw new InvalidOperationException("XamlRoot is not set.");
         }
 
+        var gcodeViewModel = await _dialogService.ShowGCodeDialogAsync(_rootContainer.XamlRoot);
+
+        if(gcodeViewModel is not null) {
+
+            double selectedNozzleSize = double.Parse(gcodeViewModel.GCodeSettings.SelectedNozzleSize);
+            double nozzleArea = Math.PI * Math.Pow(selectedNozzleSize / 2, 2);
+
+            var fileName = gcodeViewModel.GCodeSettings.FileName;
+
+            if(!fileName.EndsWith(Constants.gcode, StringComparison.OrdinalIgnoreCase)) {
+                // Append the ".fcode" extension if it's missing
+                fileName += Constants.gcode;
+            }
+
+            GetLineData();
+
+            ExportToGcode(
+                fileName,
+                gcodeViewModel.GCodeSettings.SelectedPrinterModel,
+                gcodeViewModel.GCodeSettings.SelectedFilament,
+                gcodeViewModel.GCodeSettings.SelectedNozzleSize,
+                gcodeViewModel.GCodeSettings.LayerHeight,
+                gcodeViewModel.GCodeSettings.ExtruderTemp,
+                gcodeViewModel.GCodeSettings.BedTemp,
+                gcodeViewModel.GCodeSettings.Retraction,
+                gcodeViewModel.GCodeSettings.PrintSpeed,
+                gcodeViewModel.GCodeSettings.SelectedBedLeveling,
+                gcodeViewModel.GCodeSettings.CoolingSpeed,
+                nozzleArea * gcodeViewModel.GCodeSettings.ExtrusionLengthExtended);
+
+            var pathToFile = FilePathManager.GetFilePath(fileName);
+
+            notificationHelper.LaunchToastNotification(pathToFile);
+        }
     }
 
     [RelayCommand]
@@ -149,45 +132,45 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog, Notification
     async Task GuidedProcessAsync() {
 
         Points.Clear();
+        _selectedPoints.Clear();
         _canvas = _drawingHelper!.CreateCanva();
         _drawingHelper.DrawGridMarginsAndTextBlocks();
 
-        GridView gridView = new() {
-            Width = 400,
-            Height = 600
-        };
-
-        for(int i = 0; i < _canvas!.Width; i += Constants.gridSpacing) {
-            for(int j = 0; j < _canvas.Height; j += Constants.gridSpacing) {
-                var point = new PointModel(i, j);
-                var checkBox = new CheckBox {
-                    Content = $"Point ({point.X / Constants.gridSpacing},{point.Y / Constants.gridSpacing})",
-                    IsChecked = false, // Default to unchecked                    
-                    Tag = point,
-                };
-                checkBox.Checked += GuidCheckBox_CheckedChanged;
-                checkBox.Unchecked += GuidCheckBox_CheckedChanged;
-                gridView.Items.Add(checkBox);
-            }
+        if(_canvas == null || _rootContainer?.XamlRoot == null) {
+            throw new InvalidOperationException("Canvas or XamlRoot is not initialized.");
         }
 
-        var response = await DialogHelper.ShowDialogAsync
-            (Constants.pointsSeletion,
-            gridView, Constants.ok, null,
-            _rootContainer!.XamlRoot, 400, 400, 600,
-            400, 800, 600);
+        var isConfirmed = await _dialogService.ShowGuidedProcessDialogAsync(_selectedPoints, _canvas, _rootContainer.XamlRoot);
 
-        if(response == ContentDialogResult.Primary) {
-            if(_selectedPoints.Count > 1) {
-                for(int i = 0; i < _selectedPoints.Count - 1; i++) {
-                    var startPoint = new PointModel(_selectedPoints[i].X * Constants.gridSpacing, _selectedPoints[i].Y * Constants.gridSpacing);
-                    var endPoint = new PointModel(_selectedPoints[i + 1].X * Constants.gridSpacing, _selectedPoints[i + 1].Y * Constants.gridSpacing);
-                    _drawingHelper.DrawLine(startPoint, endPoint);
-                    _drawingHelper!.RemoveGridMarginsAndTextBlocks();
-                }
+        if(isConfirmed && _selectedPoints.Count > 1) {
+
+            for(int i = 0; i < _selectedPoints.Count - 1; i++) {
+                var startPoint = new PointModel(
+                    _selectedPoints[i].X * Constants.gridSpacing,
+                    _selectedPoints[i].Y * Constants.gridSpacing
+                );
+
+                var endPoint = new PointModel(
+                    _selectedPoints[i + 1].X * Constants.gridSpacing,
+                    _selectedPoints[i + 1].Y * Constants.gridSpacing
+                );
+
+                _drawingHelper.DrawLine(startPoint, endPoint);
             }
+
+
         }
+        _drawingHelper.RemoveGridMarginsAndTextBlocks();
     }
+
+    [RelayCommand]
+    void OpenFileExplorer() {
+
+        var searchFilesWindow = serviceProvider.GetRequiredService<FileExplorerWindow>();
+
+        WindowHelper.CreateNewWindow(searchFilesWindow, "Search for file");
+    }
+
 
     [RelayCommand]
     void AddMargin() {
@@ -221,6 +204,7 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog, Notification
         => new(point.X, point.Y, z);
 
     public List<Tuple<PointModel3D, PointModel3D, PointModel3D, PointModel3D>>
+
         Generate3DLines(double thickness) {
         List<Tuple<PointModel3D, PointModel3D, PointModel3D, PointModel3D>> extrudedLines = [];
 
@@ -361,19 +345,6 @@ public partial class MainViewModel(GcodeSettingsDialog gcodeDialog, Notification
     }
 
     #region UI Event Handlers
-
-    private void GuidCheckBox_CheckedChanged(object sender, RoutedEventArgs e) {
-        var checkBox = sender as CheckBox;
-        if(checkBox?.Tag is PointModel point) {
-            var correctedPoint = new PointModel(point.X / Constants.gridSpacing, point.Y / Constants.gridSpacing);
-            if(checkBox!.IsChecked == true) {
-                _selectedPoints.Add(correctedPoint);
-            }
-            else {
-                _selectedPoints.Remove(correctedPoint);
-            }
-        }
-    }
 
     private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
         var position = e.GetCurrentPoint(_canvas).Position;

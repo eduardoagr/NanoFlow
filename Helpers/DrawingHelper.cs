@@ -14,7 +14,7 @@ public class DrawingHelper(
         };
 
         rootContainer!.Children.Add(canvas);
-        Grid.SetRow(canvas, 1);
+        Grid.SetRow(canvas, 2);
 
         return canvas;
     }
