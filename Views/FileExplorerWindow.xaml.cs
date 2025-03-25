@@ -11,7 +11,5 @@ public sealed partial class FileExplorerWindow : Window {
         FileExplorerWindowViewModel = explorerWindowViewModel;
 
         rootContainer.DataContext = FileExplorerWindowViewModel;
-
-
     }
 }

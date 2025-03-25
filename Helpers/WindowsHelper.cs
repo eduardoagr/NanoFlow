@@ -30,10 +30,10 @@ public static class WindowHelper {
 
             var customTitleBar = new CustomTitleBar(window, titleBarViewModel) {
                 DataContext = titleBarViewModel,
+                Height = 48,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Top,
             };
-
-            window.ExtendsContentIntoTitleBar = true;
 
             var appWindow = GetAppWindowFromWindow(window);
 
@@ -41,10 +41,17 @@ public static class WindowHelper {
             appWindow!.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
 
             // Attach title bar dynamically
-            var rootGrid = (Grid)window.Content;
+            var rootGrid = window.Content as Grid;
+            if(rootGrid == null) {
+                Debug.WriteLine("The window's content is not a Grid. Cannot add a custom title bar.");
+                return;
+            }
 
-            // Add the custom title bar to the grid
-            rootGrid!.Children.Insert(0, customTitleBar);
+            rootGrid.Children.Insert(0, customTitleBar);
+
+            // Set the custom title bar as the window's title bar
+            window.SetTitleBar(customTitleBar);
+
         }
     }
 

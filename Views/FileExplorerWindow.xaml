@@ -20,7 +20,6 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-
         <Grid Grid.Row="1">
 
             <Grid.ColumnDefinitions>
@@ -29,9 +28,7 @@
                 <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
-            <!--  Placeholder for TreeView: Replace ListView with TreeView later  -->
-            <!--  For TreeView, reintroduce SfTreeView and hierarchical structure  -->
-
+            <!--  Left Section: ListView  -->
             <ListView
                 Padding="10"
                 ItemsSource="{x:Bind FileExplorerWindowViewModel.FolderItems}"
@@ -64,6 +61,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
+            <!--  Center Section: GridView  -->
             <GridView
                 Grid.Column="1"
                 Padding="10"
@@ -71,11 +69,6 @@
                 ItemsSource="{x:Bind FileExplorerWindowViewModel.GcodeItems}"
                 SelectedItem="{x:Bind FileExplorerWindowViewModel.SelectedFile, Mode=TwoWay}"
                 SelectionMode="Single">
-                <Interactivity:Interaction.Behaviors>
-                    <Interactions:EventTriggerBehavior EventName="ItemClick">
-                        <Interactions:InvokeCommandAction Command="{x:Bind FileExplorerWindowViewModel.FileSelectedCommand}" />
-                    </Interactions:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="models:GcodeItem">
                         <StackPanel
@@ -95,18 +88,28 @@
                 </GridView.ItemTemplate>
             </GridView>
 
-            <StackPanel
+            <!--  Right Section: Details  -->
+            <Grid
                 Grid.Column="2"
                 Padding="10"
                 Background="#49212121"
-                Visibility="{x:Bind FileExplorerWindowViewModel.DetailsStackPanelVisibility, Mode=OneWay}">
+                Visibility="{x:Bind FileExplorerWindowViewModel.DetailsPanelVisibility, Mode=OneWay}">
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
                 <Image
-                    Margin="10"
                     HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
                     Source="/Assets/gcode_Large.png" />
 
-                <Grid>
+                <Grid
+                    Grid.Row="1"
+                    Margin="10,20,0,0"
+                    HorizontalAlignment="Center"
+                    ColumnSpacing="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -119,6 +122,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
+                    <!--  File Details  -->
                     <TextBlock
                         FontWeight="Bold"
                         Text="File name" />
@@ -129,7 +133,7 @@
                     <TextBlock
                         Grid.Row="1"
                         FontWeight="Bold"
-                        Text="File extention" />
+                        Text="File extension" />
                     <TextBlock
                         Grid.Row="1"
                         Grid.Column="1"
@@ -147,21 +151,24 @@
                     <TextBlock
                         Grid.Row="3"
                         FontWeight="Bold"
-                        Text="File creation" />
-
+                        Text="File size" />
                     <TextBlock
                         Grid.Row="3"
                         Grid.Column="1"
-                        Text="{x:Bind FileExplorerWindowViewModel.SelectedFile.FileSize, Mode=OneWay}" />
+                        Text="{x:Bind FileExplorerWindowViewModel.SelectedFile.GetFormattedFileSize, Mode=OneWay}" />
 
+                    <!--  Button  -->
                     <Button
-                        Grid.Row="5"
+                        Grid.Row="4"
                         Grid.ColumnSpan="2"
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Center"
+                        Command="{x:Bind FileExplorerWindowViewModel.StartSimulationCommand}"
                         Content="Start simulation" />
-
                 </Grid>
-            </StackPanel>
+
+
+            </Grid>
         </Grid>
     </Grid>
 </Window>

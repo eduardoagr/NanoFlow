@@ -15,6 +15,7 @@ global using NanoFlow.Controls;
 global using NanoFlow.Helpers;
 global using NanoFlow.Interfaces;
 global using NanoFlow.Model;
+global using NanoFlow.Services;
 global using NanoFlow.ViewModels;
 global using NanoFlow.Views;
 global using NanoFlow.Views.Dialogs;

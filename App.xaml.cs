@@ -18,6 +18,8 @@ public partial class App : Application {
 
         services.AddSingleton<NotificationHelper>();
 
+        services.AddTransient<_3DViwerViewModel>();
+
         services.AddTransient<GcodeDialogViewModel>();
 
         services.AddTransient<StlSettingsDialogViewModel>();
@@ -37,6 +39,11 @@ public partial class App : Application {
         services.AddTransient(p =>
                              new FileExplorerWindow(
                                  p.GetRequiredService<FileExplorerWindowViewModel>()));
+
+        services.AddTransient(p =>
+                         new _3DViwerWidnow(
+                             p.GetRequiredService<_3DViwerViewModel>()));
+
 
         Services = services.BuildServiceProvider();
 

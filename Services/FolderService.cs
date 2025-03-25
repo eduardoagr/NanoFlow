@@ -8,16 +8,16 @@
 
                  new FolderItem(Constants.desktop,
                  Constants.GetImagePath(Constants.Folder),
-                 0, DateTime.MinValue),
+                 0, DateTime.MinValue, string.Empty),
 
                  new FolderItem(Constants.documents, Constants.GetImagePath(Constants.Folder),
-                 0, DateTime.MinValue),
+                 0, DateTime.MinValue, string.Empty),
 
                  new FolderItem(Constants.downloads, Constants.GetImagePath(Constants.Folder),
-                 0, DateTime.MinValue),
+                 0, DateTime.MinValue, string.Empty),
 
                  new FolderItem(Constants.nanoFlowFolder, Constants.GetImagePath(Constants.Folder),
-                 0, DateTime.MinValue)
+                 0, DateTime.MinValue, string.Empty)
             ];
         }
 
@@ -42,7 +42,7 @@
 
                 gcodeItems.Add(new GcodeItem(Path.GetFileName(file),
                     Constants.GetImagePath(Constants.gcodeFolder.ToLower()),
-                    fileInfo.Length, fileInfo.CreationTime));
+                    fileInfo.Length, fileInfo.CreationTime, Path.GetFullPath(file)));
             }
 
             return gcodeItems;

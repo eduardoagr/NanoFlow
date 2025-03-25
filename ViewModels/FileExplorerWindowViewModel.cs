@@ -1,7 +1,6 @@
-﻿using NanoFlow.Services;
+﻿namespace NanoFlow.ViewModels {
 
-namespace NanoFlow.ViewModels {
-    public partial class FileExplorerWindowViewModel : ObservableObject {
+    public partial class FileExplorerWindowViewModel(IServiceProvider serviceProvider) : ObservableObject {
 
         public ObservableCollection<FolderItem> FolderItems { get; set; } = FolderService.GetFolders();
 
@@ -11,10 +10,10 @@ namespace NanoFlow.ViewModels {
         public FolderItem? selectedFolderItem;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(DetailsStackPanelVisibility))]
+        [NotifyPropertyChangedFor(nameof(DetailsPanelVisibility))]
         public GcodeItem? selectedFile;
 
-        public Visibility DetailsStackPanelVisibility => SelectedFile is null
+        public Visibility DetailsPanelVisibility => SelectedFile is null
             ? Visibility.Collapsed
             : Visibility.Visible;
 
@@ -39,9 +38,18 @@ namespace NanoFlow.ViewModels {
         }
 
         [RelayCommand]
-        void FileSelected() {
+        void StartSimulation() {
 
+            if(SelectedFile is not null) {
 
+                // Create the ViewModel with SelectedFile
+                var viewerViewModel = new _3DViwerViewModel(SelectedFile!);
+
+                // Create the new window and pass the ViewModel to its constructor
+                var newWindow = new _3DViwerWidnow(viewerViewModel);
+
+                WindowHelper.CreateNewWindow(newWindow, SelectedFile!.FilePath);
+            }
         }
     }
 }
