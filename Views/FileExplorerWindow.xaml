@@ -31,6 +31,7 @@
             <!--  Left Section: ListView  -->
             <ListView
                 Padding="10"
+                ItemContainerStyle="{StaticResource CustomListViewItemStyle}"
                 ItemsSource="{x:Bind FileExplorerWindowViewModel.FolderItems}"
                 SelectedItem="{x:Bind FileExplorerWindowViewModel.SelectedFolderItem, Mode=TwoWay}"
                 SelectionMode="Single">
@@ -66,6 +67,7 @@
                 Grid.Column="1"
                 Padding="10"
                 IsItemClickEnabled="True"
+                ItemContainerStyle="{StaticResource CustomGridViewItemStyle}"
                 ItemsSource="{x:Bind FileExplorerWindowViewModel.GcodeItems}"
                 SelectedItem="{x:Bind FileExplorerWindowViewModel.SelectedFile, Mode=TwoWay}"
                 SelectionMode="Single">
@@ -92,9 +94,14 @@
             <Grid
                 Grid.Column="2"
                 Padding="10"
-                Background="#49212121"
+                Style="{StaticResource DetailsPanelStyle}"
                 Visibility="{x:Bind FileExplorerWindowViewModel.DetailsPanelVisibility, Mode=OneWay}">
-                
+
+                <Grid.RenderTransform>
+                    <TranslateTransform X="{x:Bind FileExplorerWindowViewModel.DetailsPanelOffset, Mode=OneWay}" />
+                </Grid.RenderTransform>
+
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />

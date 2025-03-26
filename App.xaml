@@ -13,7 +13,38 @@
                 <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!--  Other app resources here  -->
+            <!--  ThemeDictionaries for light and dark modes  -->
+            <ResourceDictionary.ThemeDictionaries>
+                <!--  Light Theme  -->
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush
+                        x:Key="ItemSelectedBackgroundBrush"
+                        Color="#CCE8FF" />
+                    <SolidColorBrush
+                        x:Key="DetailsPaneBackgroundBrush"
+                        Color="Transparent" />
+                    <!--  Light theme  -->
+                </ResourceDictionary>
+
+                <!--  Dark Theme  -->
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush
+                        x:Key="ItemSelectedBackgroundBrush"
+                        Color="#505050" />
+                    <SolidColorBrush
+                        x:Key="DetailsPaneBackgroundBrush"
+                        Color="#202020" />
+                    <!--  Dark theme  -->
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <!--  Fallback Brushes  -->
+            <SolidColorBrush
+                x:Key="ItemSelectedBrush"
+                Color="#CCE8FF" />
+            <SolidColorBrush
+                x:Key="DetailsPaneBackgroundBrush"
+                Color="Transparent" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

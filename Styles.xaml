@@ -53,4 +53,65 @@
         <Setter Property="CornerRadius" Value="8" />
     </Style>
 
+    <!--  GridViewItem Style  -->
+    <Style
+        x:Key="CustomGridViewItemStyle"
+        TargetType="GridViewItem">
+        <Setter Property="FocusVisualPrimaryBrush" Value="Transparent" />
+        <Setter Property="FocusVisualSecondaryBrush" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GridViewItem">
+                    <ListViewItemPresenter
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Background="{TemplateBinding Background}"
+                        Content="{TemplateBinding Content}"
+                        ContentTransitions="{TemplateBinding ContentTransitions}"
+                        PointerOverBackground="{ThemeResource ItemSelectedBackgroundBrush}"
+                        PointerOverBorderBrush="{ThemeResource ItemSelectedBackgroundBrush}"
+                        SelectedBackground="{ThemeResource ItemSelectedBackgroundBrush}"
+                        SelectedBorderBrush="{ThemeResource ItemSelectedBackgroundBrush}"
+                        SelectedPointerOverBackground="{ThemeResource ItemSelectedBackgroundBrush}"
+                        SelectedPointerOverBorderBrush="{ThemeResource ItemSelectedBackgroundBrush}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  ListViewItem Style  -->
+
+    <Style
+        x:Key="CustomListViewItemStyle"
+        TargetType="ListViewItem">
+        <Setter Property="FocusVisualPrimaryBrush" Value="Transparent" />
+        <Setter Property="FocusVisualSecondaryBrush" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <ListViewItemPresenter
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Background="{TemplateBinding Background}"
+                        Content="{TemplateBinding Content}"
+                        ContentTransitions="{TemplateBinding ContentTransitions}"
+                        PointerOverBackground="{ThemeResource ItemSelectedBackgroundBrush}"
+                        PointerOverBorderBrush="{ThemeResource ItemSelectedBackgroundBrush}"
+                        SelectedBackground="{ThemeResource ItemSelectedBackgroundBrush}"
+                        SelectedBorderBrush="{ThemeResource ItemSelectedBackgroundBrush}"
+                        SelectedPointerOverBackground="{ThemeResource ItemSelectedBackgroundBrush}"
+                        SelectedPointerOverBorderBrush="{ThemeResource ItemSelectedBackgroundBrush}" />
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+        x:Key="DetailsPanelStyle"
+        TargetType="Grid">
+        <Setter Property="Background" Value="{ThemeResource DetailsPaneBackgroundBrush}" />
+    </Style>
+
+
 </ResourceDictionary>

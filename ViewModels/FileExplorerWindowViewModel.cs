@@ -1,4 +1,5 @@
-﻿namespace NanoFlow.ViewModels {
+﻿
+namespace NanoFlow.ViewModels {
 
     public partial class FileExplorerWindowViewModel(IServiceProvider serviceProvider) : ObservableObject {
 
@@ -12,6 +13,9 @@
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(DetailsPanelVisibility))]
         public GcodeItem? selectedFile;
+
+        [ObservableProperty]
+        private double detailsPanelOffset = 300;
 
         public Visibility DetailsPanelVisibility => SelectedFile is null
             ? Visibility.Collapsed
@@ -50,6 +54,19 @@
 
                 WindowHelper.CreateNewWindow(newWindow, SelectedFile!.FilePath);
             }
+        }
+
+        partial void OnSelectedFileChanged(GcodeItem? oldValue, GcodeItem? newValue) {
+           
+            if(newValue is null) {
+                // Slide out if there's no selected file
+                DetailsPanelOffset = 300;
+            }
+            else {
+                // Slide in when a file is selected
+                DetailsPanelOffset = 0;
+            }
+
         }
     }
 }

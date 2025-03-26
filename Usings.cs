@@ -1,6 +1,9 @@
 ﻿global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
 
+global using HelixToolkit.SharpDX.Core;
+global using HelixToolkit.WinUI;
+
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Toolkit.Uwp.Notifications;
 global using Microsoft.UI;
@@ -16,9 +19,12 @@ global using NanoFlow.Helpers;
 global using NanoFlow.Interfaces;
 global using NanoFlow.Model;
 global using NanoFlow.Services;
+global using NanoFlow.Servies;
 global using NanoFlow.ViewModels;
 global using NanoFlow.Views;
 global using NanoFlow.Views.Dialogs;
+
+global using SharpDX;
 
 global using Syncfusion.Licensing;
 

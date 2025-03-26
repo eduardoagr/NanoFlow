@@ -1,9 +1,4 @@
-﻿using HelixToolkit.SharpDX.Core;
-using HelixToolkit.WinUI;
-
-using SharpDX;
-
-namespace NanoFlow.ViewModels {
+﻿namespace NanoFlow.ViewModels {
     public partial class _3DViwerViewModel : ObservableObject {
 
         [ObservableProperty]
@@ -13,7 +8,6 @@ namespace NanoFlow.ViewModels {
         private int fieldOView = 120;
 
         // Camera for 3D visualization
-
         [ObservableProperty]
         public PerspectiveCamera camera;
 
