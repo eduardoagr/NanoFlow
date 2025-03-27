@@ -1,4 +1,6 @@
-﻿namespace NanoFlow.Servies {
+﻿using Constants = NanoFlow.Helpers.Constants;
+
+namespace NanoFlow.Servies {
 
     public class DialogService(IServiceProvider serviceProvider) : IDialogService {
         public async Task<GcodeDialogViewModel?> ShowGCodeDialogAsync(XamlRoot xamlRoot) {

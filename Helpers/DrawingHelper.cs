@@ -1,4 +1,6 @@
-﻿namespace NanoFlow.Helpers;
+﻿using Color = Windows.UI.Color;
+
+namespace NanoFlow.Helpers;
 
 public class DrawingHelper(
     Canvas? canvas, Grid? rootContainer, List<Line> gridMarginLines,

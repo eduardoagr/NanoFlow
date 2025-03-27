@@ -44,7 +44,7 @@
                 Color="#CCE8FF" />
             <SolidColorBrush
                 x:Key="DetailsPaneBackgroundBrush"
-                Color="Transparent" />
+                Color="#202020" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

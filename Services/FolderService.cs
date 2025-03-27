@@ -1,4 +1,6 @@
-﻿namespace NanoFlow.Services {
+﻿using Constants = NanoFlow.Helpers.Constants;
+
+namespace NanoFlow.Services {
 
     public class FolderService {
 

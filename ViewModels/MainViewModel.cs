@@ -1,4 +1,6 @@
-﻿namespace NanoFlow.ViewModels;
+﻿using Constants = NanoFlow.Helpers.Constants;
+
+namespace NanoFlow.ViewModels;
 
 public partial class MainViewModel(IServiceProvider serviceProvider,
     IDialogService _dialogService, NotificationHelper notificationHelper) : ObservableObject {
