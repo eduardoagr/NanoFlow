@@ -2,7 +2,7 @@
 
 public class Constants {
 
-    public const string syncfusionLicenseKey = "MzczMDcxNEAzMjM4MmUzMDJlMzBrV3dmVEhRTFFJRmtZRGZUdzRqeEJmN3lOcU5wUkwzb2tBRnRuOVNyOHJzPQ==";
+    public const string syncfusionLicenseKey = "Mzc4MTU5N0AzMjM5MmUzMDJlMzAzYjMyMzkzYkJYdFJEcnlId2RHNm9seVhJWEFKUkppMDltSzgrOEJRYzdrcDdLZVJGMXM9";
 
     public const string nanoFlowFolder = "NanoFlow";
 
