@@ -18,8 +18,8 @@ namespace NanoFlow.Services {
                  new FolderItem(Constants.downloads, Constants.GetImagePath(Constants.Folder),
                  0, DateTime.MinValue, string.Empty),
 
-                 new FolderItem(Constants.nanoFlowFolder, Constants.GetImagePath(Constants.Folder),
-                 0, DateTime.MinValue, string.Empty)
+                  new FolderItem(Constants.nanoFlowFolder, Constants.GetImagePath(Constants.Folder),
+                 0, DateTime.MinValue, string.Empty),
             ];
         }
 

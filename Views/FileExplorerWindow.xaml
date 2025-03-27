@@ -92,13 +92,13 @@
 
             <!--  Right Section: Details  -->
             <Grid
+                x:Name="SlidingGrid"
                 Grid.Column="2"
                 Padding="10"
-                Style="{StaticResource DetailsPanelStyle}"
-                Visibility="{x:Bind FileExplorerWindowViewModel.DetailsPanelVisibility, Mode=OneWay}">
-
+                Style="{StaticResource DetailsPanelStyle}">
+                
                 <Grid.RenderTransform>
-                    <TranslateTransform X="{x:Bind FileExplorerWindowViewModel.DetailsPanelOffset, Mode=OneWay}" />
+                    <TranslateTransform x:Name="SlideTransform" X="300" />
                 </Grid.RenderTransform>
 
 
