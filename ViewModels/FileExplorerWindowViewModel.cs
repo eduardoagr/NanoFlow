@@ -1,7 +1,7 @@
 ﻿
 namespace NanoFlow.ViewModels {
 
-    public partial class FileExplorerWindowViewModel(IServiceProvider serviceProvider) : ObservableObject {
+    public partial class FileExplorerWindowViewModel : ObservableObject {
 
         public event Action<string>? OnDetailsPanelSlide;
 
