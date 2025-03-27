@@ -36,7 +36,7 @@ namespace NanoFlow.Services {
             };
 
 
-            var files = Directory.GetFiles(folderPath, $"*{Constants.gcode}");
+            var files = Directory.GetFiles(folderPath, $"*");
 
             foreach(var file in files) {
 
