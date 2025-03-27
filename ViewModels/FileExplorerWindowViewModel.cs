@@ -57,7 +57,7 @@ namespace NanoFlow.ViewModels {
         }
 
         partial void OnSelectedFileChanged(GcodeItem? oldValue, GcodeItem? newValue) {
-           
+
             if(newValue is null) {
                 // Slide out if there's no selected file
                 DetailsPanelOffset = 300;
