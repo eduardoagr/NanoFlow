@@ -31,7 +31,6 @@ namespace NanoFlow.Services {
                 Constants.desktop => Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 Constants.documents => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 Constants.downloads => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.downloads),
-                Constants.nanoFlowFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Constants.nanoFlowFolder),
                 _ => throw new ArgumentException("Invalid folder name")
             };
 
