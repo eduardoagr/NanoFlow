@@ -16,7 +16,7 @@ namespace NanoFlow.ViewModels {
         public GcodeItem? selectedFile;
 
         [ObservableProperty]
-        private double detailsPanelOffset;
+        private double detailsPanelOffset = 0;
 
         [RelayCommand]
         void FolderSeleted() {
