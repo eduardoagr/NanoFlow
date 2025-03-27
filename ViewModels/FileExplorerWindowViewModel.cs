@@ -50,13 +50,11 @@ namespace NanoFlow.ViewModels {
             }
         }
 
-
-
         partial void OnSelectedFileChanged(GcodeItem? value) {
 
             var fileName = value?.FileName ?? string.Empty;
             Debug.WriteLine($"FileName changed to: {fileName}");
-
+  
             // Trigger the animation with the fileName
             OnDetailsPanelSlide?.Invoke(fileName);
         }
