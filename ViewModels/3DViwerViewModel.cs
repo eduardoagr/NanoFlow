@@ -1,4 +1,5 @@
 ﻿namespace NanoFlow.ViewModels {
+
     public partial class _3DViwerViewModel : ObservableObject {
 
         [ObservableProperty]
@@ -6,6 +7,12 @@
 
         [ObservableProperty]
         private int fieldOView = 120;
+
+        [ObservableProperty]
+        Brush lineColor = new SolidColorBrush(Colors.Blue);
+
+        [ObservableProperty]
+        Color selecterLineColor;
 
         // Camera for 3D visualization
         [ObservableProperty]
@@ -17,12 +24,7 @@
         // Main 3D content (e.g., parsed G-code lines)
         public LineGeometry3D Root { get; }
 
-        // Optional Axis
-        public LineGeometry3D Axis { get; } = GenerateGridLines();
-
         public Vector3 ModelCentroid { get; } = new Vector3(0, 0, 0);
-
-        public bool ShowAxis { get; set; } = true;
 
         public _3DViwerViewModel(GcodeItem gcodeContent) {
             FileContent = File.Exists(gcodeContent.FilePath)
@@ -37,6 +39,8 @@
                 UpDirection = new Vector3(0, 1, 0),
                 FieldOfView = fieldOView,
             };
+
+            OnLineColorChanged(LineColor);
 
         }
 
@@ -84,20 +88,11 @@
             return builder.ToLineGeometry3D();
         }
 
-        private static LineGeometry3D GenerateGridLines() {
-            var builder = new LineBuilder();
+        partial void OnLineColorChanged(Brush value) {
 
-            // Create horizontal and vertical grid lines
-            for(float i = -10; i <= 10; i += 1.0f) {
-                // Horizontal lines
-                builder.AddLine(new Vector3(-10, i, 0), new Vector3(10, i, 0));
-                // Vertical lines
-                builder.AddLine(new Vector3(i, -10, 0), new Vector3(i, 10, 0));
+            if(value is SolidColorBrush solidColorBrush) {
+                SelecterLineColor = solidColorBrush.Color;
             }
-
-            return builder.ToLineGeometry3D();
         }
-
-
     }
 }

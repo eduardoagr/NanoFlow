@@ -37,10 +37,9 @@ global using System.IO;
 global using System.Linq;
 global using System.Threading.Tasks;
 
-global using Windows.UI;
-
 global using WinRT.Interop;
 
+global using Color = Windows.UI.Color;
 global using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 global using Path = System.IO.Path;
 
