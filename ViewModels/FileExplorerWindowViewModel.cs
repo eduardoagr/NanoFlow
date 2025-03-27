@@ -3,6 +3,8 @@ namespace NanoFlow.ViewModels {
 
     public partial class FileExplorerWindowViewModel(IServiceProvider serviceProvider) : ObservableObject {
 
+        public event Action<double>? OnDetailsPanelSlide;
+
         public ObservableCollection<FolderItem> FolderItems { get; set; } = FolderService.GetFolders();
 
         public ObservableCollection<GcodeItem>? GcodeItems { get; set; } = [];
@@ -11,15 +13,10 @@ namespace NanoFlow.ViewModels {
         public FolderItem? selectedFolderItem;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(DetailsPanelVisibility))]
         public GcodeItem? selectedFile;
 
         [ObservableProperty]
-        private double detailsPanelOffset = 300;
-
-        public Visibility DetailsPanelVisibility => SelectedFile is null
-            ? Visibility.Collapsed
-            : Visibility.Visible;
+        private double detailsPanelOffset;
 
         [RelayCommand]
         void FolderSeleted() {
@@ -56,9 +53,10 @@ namespace NanoFlow.ViewModels {
             }
         }
 
-        partial void OnSelectedFileChanged(GcodeItem? oldValue, GcodeItem? newValue) {
-           
-            if(newValue is null) {
+        partial void OnSelectedFileChanged(GcodeItem? value) {
+
+            if(value is not null && value!.FileName == null) {
+
                 // Slide out if there's no selected file
                 DetailsPanelOffset = 300;
             }
@@ -67,6 +65,7 @@ namespace NanoFlow.ViewModels {
                 DetailsPanelOffset = 0;
             }
 
+            OnDetailsPanelSlide?.Invoke(DetailsPanelOffset);
         }
     }
 }
