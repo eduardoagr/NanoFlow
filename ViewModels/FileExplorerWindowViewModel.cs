@@ -11,7 +11,6 @@ namespace NanoFlow.ViewModels {
 
         public ObservableCollection<GcodeItem> FilteredGcodeItems { get; set; } = [];
 
-
         [ObservableProperty]
         string searchBoxText = string.Empty;
 
