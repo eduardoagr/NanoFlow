@@ -1,0 +1,72 @@
+<UserControl
+    x:Class="NanoFlow.Controls.CustomFolderPeekData"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:NanoFlow.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="Auto"
+    Height="Auto"
+    HorizontalAlignment="Left"
+    VerticalAlignment="Top"
+    Visibility="Collapsed"
+    mc:Ignorable="d">
+
+    <Border
+        x:Name="peekContainer"
+        Padding="10"
+        Background="{StaticResource ItemSelectedBackgroundBrush}"
+        BorderBrush="{StaticResource ItemSelectedBackgroundBrush}"
+        BorderThickness="2"
+        CornerRadius="8">
+        <Border.RenderTransform>
+            <TranslateTransform x:Name="TranslateTransform" />
+        </Border.RenderTransform>
+        <StackPanel>
+            <TextBlock
+                x:Name="FileNum"
+                FontSize="14"
+                FontWeight="Bold" />
+        </StackPanel>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="visibilityStates">
+                <VisualState x:Name="peekContainerVisible">
+                    <Storyboard>
+                        <!--  Translate animation first (slide in from top)  -->
+                        <DoubleAnimation
+                            Storyboard.TargetName="TranslateTransform"
+                            Storyboard.TargetProperty="Y"
+                            From="-50"
+                            To="0"
+                            Duration="0:0:0.3">
+                            <DoubleAnimation.EasingFunction>
+                                <QuadraticEase EasingMode="EaseOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <!--  Then fade in opacity after translation  -->
+                        <DoubleAnimation
+                            Storyboard.TargetName="peekContainer"
+                            Storyboard.TargetProperty="Opacity"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.3" />
+                    </Storyboard>
+                </VisualState>
+
+                <VisualState x:Name="peekContainerCollapsed">
+                    <Storyboard>
+                        <!--  Only fade-out opacity (no translation)  -->
+                        <DoubleAnimation
+                            Storyboard.TargetName="peekContainer"
+                            Storyboard.TargetProperty="Opacity"
+                            From="1"
+                            To="0"
+                            Duration="0:0:0.3" />
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Border>
+
+</UserControl>

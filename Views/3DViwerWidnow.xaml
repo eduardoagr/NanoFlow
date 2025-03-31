@@ -45,22 +45,59 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <StackPanel
-                    Orientation="Horizontal"
-                    Spacing="5">
+                <Grid
+                    Margin="10,0,10,0"
+                    ColumnSpacing="10"
+                    RowSpacing="5">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="Line color" />
+                    <editors:SfDropDownColorPalette
+                        Grid.Column="1"
+                        SelectedBrush="{x:Bind _3DViwerViewModel.LineColor, Mode=TwoWay}" />
 
                     <TextBlock
-                        Margin="5,5,0,0"
-                        Text="Line color" />
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Text="Camera color" />
+                    
+                    <editors:SfDropDownColorPalette
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        SelectedBrush="{x:Bind _3DViwerViewModel.CameraColor, Mode=TwoWay}" />
 
-                    <editors:SfDropDownColorPalette SelectedBrush="{x:Bind _3DViwerViewModel.LineColor, Mode=TwoWay}" />
-                </StackPanel>
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Text="Line thickness" />
+                    <Slider
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Maximum="10"
+                        Minimum="0.5"
+                        Value="{x:Bind _3DViwerViewModel.LineThickness, Mode=TwoWay}" />
+                </Grid>
 
 
                 <hx:Viewport3DX
                     Grid.Row="1"
                     Grid.Column="1"
-                    BackgroundColor="#C3000000"
+                    BackgroundColor="{x:Bind _3DViwerViewModel.SelectedCameraColor, Mode=TwoWay}"
                     Camera="{x:Bind _3DViwerViewModel.Camera, Mode=TwoWay}"
                     EffectsManager="{x:Bind _3DViwerViewModel.EffectsManager}"
                     FXAALevel="High"
@@ -68,13 +105,11 @@
                     FixedRotationPointEnabled="True"
                     IsPinchZoomEnabled="True"
                     IsZoomEnabled="True"
-                    ShowViewCube="False"
-                    ZoomAroundMouseDownPoint="True">
+                    ShowViewCube="False">
 
-                    <!--  Render main content  -->
                     <hx:LineGeometryModel3D
                         Geometry="{x:Bind _3DViwerViewModel.Root}"
-                        Thickness="2.0"
+                        Thickness="{x:Bind _3DViwerViewModel.LineThickness, Mode=TwoWay}"
                         Color="{x:Bind _3DViwerViewModel.SelecterLineColor, Mode=TwoWay}" />
                 </hx:Viewport3DX>
             </Grid>

@@ -6,10 +6,19 @@
         private string fileContent;
 
         [ObservableProperty]
-        private int fieldOView = 120;
+        private int fieldOView = 160;
+
+        [ObservableProperty]
+        double lineThickness = 1.0;
 
         [ObservableProperty]
         Brush lineColor = new SolidColorBrush(Colors.Blue);
+
+        [ObservableProperty]
+        Brush cameraColor = new SolidColorBrush(Colors.Black);
+
+        [ObservableProperty]
+        Color selectedCameraColor;
 
         [ObservableProperty]
         Color selecterLineColor;
@@ -92,6 +101,12 @@
 
             if(value is SolidColorBrush solidColorBrush) {
                 SelecterLineColor = solidColorBrush.Color;
+            }
+        }
+
+        partial void OnCameraColorChanged(Brush value) {
+            if(value is SolidColorBrush solidColorBrush) {
+                SelectedCameraColor = solidColorBrush.Color;
             }
         }
     }

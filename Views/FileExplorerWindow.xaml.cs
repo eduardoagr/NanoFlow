@@ -1,5 +1,7 @@
 using Microsoft.UI.Xaml.Media.Animation;
 
+using Point = Windows.Foundation.Point;
+
 namespace NanoFlow.Views;
 
 public sealed partial class FileExplorerWindow : Window {
@@ -37,5 +39,34 @@ public sealed partial class FileExplorerWindow : Window {
         Storyboard.SetTargetProperty(slideAnimation, "X");
         storyboard.Children.Add(slideAnimation);
         storyboard.Begin();
+    }
+
+    private void ItemContainer_PointerEntered(object sender, PointerRoutedEventArgs e) {
+
+        if(sender is FrameworkElement container
+            && container.DataContext is FolderItem folderItem) {
+
+            string folderName = folderItem.FileName;
+            int folderCount = FolderService.GetgcodeItems(folderName).Count;
+
+            // Calculate the position of the hovered item
+            var transform = container.TransformToVisual(rootContainer);
+            var pos = transform.TransformPoint(new Point
+                (0, container.ActualHeight - 36));
+
+            FloatingPanel.UpdateContent(folderCount);
+
+            FloatingPanel.RenderTransform = new TranslateTransform {
+                X = pos.X,
+                Y = pos.Y
+            };
+
+            FloatingPanel.ShowPanel();
+        }
+    }
+
+    private void ItemContainer_PointerExited(object sender, PointerRoutedEventArgs e) {
+
+        FloatingPanel.HidePanel();
     }
 }

@@ -4,11 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Interactions="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:controls="using:NanoFlow.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:NanoFlow.Model"
-    xmlns:muxc="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:treeView="using:Syncfusion.UI.Xaml.TreeView"
     Title="FileExplorerWindow"
     mc:Ignorable="d">
 
@@ -23,13 +22,14 @@
         <Grid Grid.Row="1">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="200" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
             <!--  Left Section: ListView  -->
             <ListView
+                x:Name="FolderListView"
                 Padding="10"
                 ItemContainerStyle="{StaticResource CustomListViewItemStyle}"
                 ItemsSource="{x:Bind FileExplorerWindowViewModel.FolderItems}"
@@ -45,8 +45,11 @@
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:FolderItem">
                         <StackPanel
+                            x:Name="ItemContainer"
                             Margin="10"
-                            Orientation="Horizontal">
+                            Orientation="Horizontal"
+                            PointerEntered="ItemContainer_PointerEntered"
+                            PointerExited="ItemContainer_PointerExited">
                             <Image
                                 Width="32"
                                 Height="32"
@@ -61,6 +64,8 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+            <controls:CustomFolderPeekData x:Name="FloatingPanel" />
 
             <!--  Center Section: GridView  -->
             <GridView
@@ -96,7 +101,7 @@
                 Grid.Column="2"
                 Padding="10"
                 Style="{StaticResource DetailsPanelStyle}">
-                
+
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="SlideTransform" X="300" />
                 </Grid.RenderTransform>

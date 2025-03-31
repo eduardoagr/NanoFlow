@@ -18,20 +18,19 @@ namespace NanoFlow.ViewModels {
         [RelayCommand]
         void FolderSeleted() {
 
-            if(SelectedFolderItem is null) {
-                return;
-            }
+            if(SelectedFolderItem is not null) {
 
-            GcodeItems?.Clear();
+                GcodeItems?.Clear();
 
-            var newItems = FolderService.GetgcodeItems(SelectedFolderItem.FileName);
+                var newItems = FolderService.GetgcodeItems(SelectedFolderItem.FileName);
 
-            if(newItems.Count > 0) {
+                if(newItems.Count > 0) {
 
-                foreach(var item in newItems) {
-                    GcodeItems?.Add(item);
+                    foreach(var item in newItems) {
+                        GcodeItems?.Add(item);
+                    }
+
                 }
-
             }
         }
 
@@ -54,7 +53,7 @@ namespace NanoFlow.ViewModels {
 
             var fileName = value?.FileName ?? string.Empty;
             Debug.WriteLine($"FileName changed to: {fileName}");
-  
+
             // Trigger the animation with the fileName
             OnDetailsPanelSlide?.Invoke(fileName);
         }

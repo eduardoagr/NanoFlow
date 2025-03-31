@@ -3,7 +3,7 @@
 namespace NanoFlow.ViewModels;
 
 public partial class MainViewModel(IServiceProvider serviceProvider,
-    IDialogService _dialogService, NotificationHelper notificationHelper) : ObservableObject {
+    IDialogService _dialogService) : ObservableObject {
 
     #region variables and constants
 
@@ -55,15 +55,13 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
                 if(string.IsNullOrWhiteSpace(fileName)) {
                     fileName = "MyDesign.stl";
                 }
-                else if(!fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) {
-                    fileName += ".stl";
+                else if(!fileName.EndsWith(Constants.stl, StringComparison.OrdinalIgnoreCase)) {
+                    fileName += Constants.stl;
                 }
 
                 GetLineData();
 
-                var stlPath = ExportSTL(fileName, 5.0);
-
-                notificationHelper.LaunchToastNotification(stlPath);
+                NotificationHelper.Toast(fileName);
 
             }
         }
@@ -86,7 +84,7 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
             var fileName = gcodeViewModel.GCodeSettings.FileName;
 
             if(!fileName.EndsWith(Constants.gcode, StringComparison.OrdinalIgnoreCase)) {
-                // Append the ".fcode" extension if it's missing
+
                 fileName += Constants.gcode;
             }
 
@@ -106,9 +104,7 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
                 gcodeViewModel.GCodeSettings.CoolingSpeed,
                 nozzleArea * gcodeViewModel.GCodeSettings.ExtrusionLengthExtended);
 
-            var pathToFile = FilePathManager.GetFilePath(fileName);
-
-            notificationHelper.LaunchToastNotification(pathToFile);
+            NotificationHelper.Toast(fileName);
         }
     }
 

@@ -2,17 +2,17 @@
 
 public class NotificationHelper {
 
-    public void LaunchToastNotification(string filepath) {
+    //public void LaunchToastNotification(string filepath) {
 
-        ToastNotificationManagerCompat.OnActivated +=
-            toastArgs => {
+    //    ToastNotificationManagerCompat.OnActivated +=
+    //        toastArgs => {
 
-                ToastArguments arguments = ToastArguments.Parse(
-                    toastArgs.Argument);
-            };
+    //            ToastArguments arguments = ToastArguments.Parse(
+    //                toastArgs.Argument);
+    //        };
 
-        Toast(Path.GetFileName(filepath), filepath);
-    }
+    //    Toast(Path.GetFileName(filepath), filepath);
+    //}
 
     ///private void HandleToastButtonAction(string action, string filepath) {
     //    switch(action) {
@@ -31,11 +31,10 @@ public class NotificationHelper {
     //}
 
     // Display the toast notification
-    private static void Toast(string fileName, string filepath) {
+    public static void Toast(string fileName) {
         new ToastContentBuilder()
             .AddText("Success")
             .AddText($"'{fileName}' saved successfully.")
-                .AddArgument("filepath", filepath)
             .Show();
     }
 }

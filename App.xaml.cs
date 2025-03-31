@@ -16,8 +16,6 @@ public partial class App : Application {
 
         services.AddTransient<FileExplorerWindowViewModel>();
 
-        services.AddSingleton<NotificationHelper>();
-
         services.AddTransient<_3DViwerViewModel>();
 
         services.AddTransient<GcodeDialogViewModel>();
