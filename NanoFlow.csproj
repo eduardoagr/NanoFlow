@@ -13,7 +13,6 @@
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<Nullable>enable</Nullable>
-		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 	</PropertyGroup>
 	<ItemGroup>
 		<Content Remove="Assets\LargeTile.scale-100.png" />
