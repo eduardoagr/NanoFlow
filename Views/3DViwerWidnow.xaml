@@ -22,7 +22,6 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!--  Scrollable TextBox inside ScrollViewer  -->
             <ScrollViewer
                 Grid.Column="0"
                 HorizontalScrollMode="Auto"
