@@ -1,4 +1,6 @@
-﻿using Constants = NanoFlow.Helpers.Constants;
+﻿using Serilog;
+
+using Constants = NanoFlow.Helpers.Constants;
 
 namespace NanoFlow;
 
@@ -44,6 +46,15 @@ public partial class App : Application {
 
 
         Services = services.BuildServiceProvider();
+
+        // Configure Serilog
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+        Log.Information("Application started");
+
 
         InitializeComponent();
     }

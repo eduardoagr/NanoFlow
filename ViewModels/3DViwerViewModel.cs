@@ -1,66 +1,96 @@
-﻿namespace NanoFlow.ViewModels {
+﻿
 
+using Serilog;
+
+
+
+namespace NanoFlow.ViewModels {
     public partial class _3DViwerViewModel : ObservableObject {
 
         [ObservableProperty]
-        private string fileContent;
+        private string fileContent; // G-code text content for display
 
         [ObservableProperty]
-        private int fieldOView = 160;
+        private int fieldOfView = 160; // Camera Field of View
 
         [ObservableProperty]
-        double lineThickness = 1.0;
+        public PerspectiveCamera camera; // 3D Camera
 
-        [ObservableProperty]
-        Brush lineColor = new SolidColorBrush(Colors.Blue);
+        public DefaultEffectsManager EffectsManager { get; } = new DefaultEffectsManager(); // Effects Manager
 
-        [ObservableProperty]
-        Brush cameraColor = new SolidColorBrush(Colors.Black);
+        public LineGeometry3D Root { get; private set; } // Main geometry to render
 
-        [ObservableProperty]
-        Color selectedCameraColor;
+        public Vector3 ModelCentroid { get; } = new Vector3(0, 0, 0); // Central rotation point
 
-        [ObservableProperty]
-        Color selecterLineColor;
-
-        // Camera for 3D visualization
-        [ObservableProperty]
-        public PerspectiveCamera camera;
-
-        // Rendering effects manager
-        public DefaultEffectsManager EffectsManager { get; } = new DefaultEffectsManager();
-
-        // Main 3D content (e.g., parsed G-code lines)
-        public LineGeometry3D Root { get; }
-
-        public Vector3 ModelCentroid { get; } = new Vector3(0, 0, 0);
-
+        // Constructor
         public _3DViwerViewModel(GcodeItem gcodeContent) {
-            FileContent = File.Exists(gcodeContent.FilePath)
-                ? File.ReadAllText(gcodeContent.FilePath)
-                : string.Empty;
+            try {
+                Log.Information("Initializing _3DViwerViewModel...");
 
-            Root = GenerateGcodeGeometry(FileContent);
+                // Load G-code content
+                if(gcodeContent != null && !string.IsNullOrWhiteSpace(gcodeContent.FilePath)) {
+                    fileContent = !File.Exists(gcodeContent.FilePath)
+                        ? string.Empty
+                        : File.ReadAllText(gcodeContent.FilePath);
 
-            Camera = new PerspectiveCamera {
-                Position = new Vector3(0, 0, 100),
-                LookDirection = new Vector3(0, 0, -100),
-                UpDirection = new Vector3(0, 1, 0),
-                FieldOfView = fieldOView,
-            };
+                    Log.Information("G-code file content loaded successfully for: {FilePath}", gcodeContent.FilePath);
+                }
+                else {
+                    fileContent = string.Empty;
+                    Log.Warning("G-code file path is invalid or not provided.");
+                }
 
-            OnLineColorChanged(LineColor);
+                // Initialize geometry
+                if(!string.IsNullOrWhiteSpace(fileContent)) {
+                    Root = GenerateGcodeGeometry(fileContent);
+                    if(Root == null) {
+                        Log.Error("Failed to generate geometry. Root is null.");
+                    }
+                    else {
+                        Log.Information("Geometry successfully generated.");
+                    }
+                }
+                else {
+                    Root = new LineGeometry3D();
+                    Log.Warning("FileContent is empty. Initialized with empty geometry.");
+                }
 
+                // Initialize the camera
+                camera = new PerspectiveCamera {
+                    Position = new Vector3(0, 0, 100), // Default position
+                    LookDirection = new Vector3(0, 0, -100), // Default look direction
+                    UpDirection = new Vector3(0, 1, 0), // Up vector
+                    FieldOfView = fieldOfView // FOV from property
+                };
+
+                if(camera == null) {
+                    Log.Error("Camera initialization failed. Camera is null.");
+                }
+                else {
+                    Log.Information("Camera initialized successfully.");
+                }
+
+                // Validate EffectsManager
+                if(EffectsManager == null) {
+                    Log.Error("EffectsManager initialization failed. EffectsManager is null.");
+                }
+                else {
+                    Log.Information("EffectsManager is successfully initialized.");
+                }
+            } catch(Exception ex) {
+                Log.Error(ex, "An error occurred during _3DViwerViewModel initialization.");
+            }
         }
 
-        private LineGeometry3D GenerateGcodeGeometry(string FileContent) {
+        // Generate Geometry from G-code
+        private LineGeometry3D GenerateGcodeGeometry(string fileContent) {
             var builder = new LineBuilder();
             var currentPosition = new Vector3(0, 0, 0);
 
-            foreach(var line in FileContent.Split(Environment.NewLine)) {
+            foreach(var line in fileContent.Split(Environment.NewLine)) {
                 try {
-                    if(line.TrimStart().StartsWith(";")) // Skip comments
-                    {
+                    if(string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith(";")) // Skip comments and empty lines
+{
                         continue;
                     }
 
@@ -72,42 +102,31 @@
                         float z = currentPosition.Z;
 
                         foreach(var part in parts) {
-                            if(part.StartsWith("X")) {
-                                x = float.Parse(part.Substring(1));
+                            if(part.StartsWith("X") && float.TryParse(part.Substring(1), out float parsedX)) {
+                                x = parsedX;
                             }
 
-                            if(part.StartsWith("Y")) {
-                                y = float.Parse(part.Substring(1));
+                            if(part.StartsWith("Y") && float.TryParse(part.Substring(1), out float parsedY)) {
+                                y = parsedY;
                             }
 
-                            if(part.StartsWith("Z")) {
-                                z = float.Parse(part.Substring(1));
+                            if(part.StartsWith("Z") && float.TryParse(part.Substring(1), out float parsedZ)) {
+                                z = parsedZ;
                             }
                         }
 
                         var newPosition = new Vector3(x, y, z);
                         builder.AddLine(currentPosition, newPosition);
                         currentPosition = newPosition;
+
+                        Log.Debug("Parsed line successfully: {LineContent}, New Position: {NewPosition}", line, newPosition);
                     }
                 } catch(Exception ex) {
-                    Debug.WriteLine($"Error parsing line: {line}. Exception: {ex.Message}");
+                    Log.Warning(ex, "Error parsing line: {LineContent}", line);
                 }
             }
 
             return builder.ToLineGeometry3D();
-        }
-
-        partial void OnLineColorChanged(Brush value) {
-
-            if(value is SolidColorBrush solidColorBrush) {
-                SelecterLineColor = solidColorBrush.Color;
-            }
-        }
-
-        partial void OnCameraColorChanged(Brush value) {
-            if(value is SolidColorBrush solidColorBrush) {
-                SelectedCameraColor = solidColorBrush.Color;
-            }
         }
     }
 }
