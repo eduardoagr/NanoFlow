@@ -1,7 +1,4 @@
-﻿
-using Serilog;
-
-namespace NanoFlow.ViewModels {
+﻿namespace NanoFlow.ViewModels {
 
     public partial class FileExplorerWindowViewModel : ObservableObject {
 
@@ -62,24 +59,13 @@ namespace NanoFlow.ViewModels {
 
             if(SelectedFile is not null) {
 
-                try {
-                    Log.Information("Starting simulation for file: {FilePath}", SelectedFile.FilePath);
+                // Create the ViewModel with SelectedFile
+                var viewerViewModel = new _3DViwerViewModel(SelectedFile!);
 
-                    // Create the ViewModel with SelectedFile
-                    var viewerViewModel = new _3DViwerViewModel(SelectedFile!);
+                // Create the new window and pass the ViewModel to its constructor
+                var newWindow = new _3DViwerWidnow(viewerViewModel);
 
-                    // Create the new window and pass the ViewModel to its constructor
-                    var newWindow = new _3DViwerWidnow(viewerViewModel);
-
-                    WindowHelper.CreateNewWindow(newWindow, SelectedFile!.FilePath);
-
-                    Log.Information("Simulation window successfully opened for file: {FilePath}", SelectedFile.FilePath);
-                } catch(Exception ex) {
-                    Log.Error(ex, "Failed to start simulation for file: {FilePath}", SelectedFile?.FilePath);
-                }
-            }
-            else {
-                Log.Warning("StartSimulation triggered, but no file is selected.");
+                WindowHelper.CreateNewWindow(newWindow, SelectedFile!.FilePath);
             }
         }
 

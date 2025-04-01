@@ -1,6 +1,6 @@
 ﻿using Constants = NanoFlow.Helpers.Constants;
 
-namespace NanoFlow.Servies {
+namespace NanoFlow.Services {
 
     public class DialogService(IServiceProvider serviceProvider) : IDialogService {
         public async Task<GcodeDialogViewModel?> ShowGCodeDialogAsync(XamlRoot xamlRoot) {
@@ -31,7 +31,7 @@ namespace NanoFlow.Servies {
                     var point = new PointModel(i / Constants.gridSpacing, j / Constants.gridSpacing);
 
                     var checkBox = new CheckBox {
-                        Content = $"X:{point.X}, Y:{point.Y}",
+                        Content = $"X: {point.X}, Y: {point.Y}",
                         IsChecked = false,
                         Tag = point
                     };
@@ -40,16 +40,12 @@ namespace NanoFlow.Servies {
                     checkBox.Checked += (s, e) => {
                         if(s is CheckBox cb && cb.Tag is PointModel p) {
                             points.Add(p);
-                            Debug.WriteLine($"Checked: ({p.X}, {p.Y})");
-
                         }
                     };
 
                     checkBox.Unchecked += (s, e) => {
                         if(s is CheckBox cb && cb.Tag is PointModel p) {
                             points.Remove(p);
-                            Debug.WriteLine($"Unchecked: ({p.X}, {p.Y})");
-
                         }
                     };
 

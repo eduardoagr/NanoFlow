@@ -44,7 +44,10 @@
                 Camera="{x:Bind _3DViwerViewModel.Camera}"
                 EffectsManager="{x:Bind _3DViwerViewModel.EffectsManager, Mode=OneWay}"
                 IsPinchZoomEnabled="True"
-                IsZoomEnabled="True" />
+                IsTouchRotateEnabled="True"
+                IsZoomEnabled="True"
+                ShowCoordinateSystem="True"
+                ShowViewCube="False" />
 
         </Grid>
     </Grid>
