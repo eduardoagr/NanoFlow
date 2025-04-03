@@ -26,11 +26,9 @@ public static class WindowHelper {
                 AppTitle = title,
             };
 
-            Debug.WriteLine($"AppTitle set to: {titleBarViewModel.AppTitle}");
-
             var customTitleBar = new CustomTitleBar(window, titleBarViewModel) {
                 DataContext = titleBarViewModel,
-                Height = 48,
+                Height = 42,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Top,
             };
@@ -56,28 +54,22 @@ public static class WindowHelper {
     }
 
 
-    // Method to maximize a window using the AppWindow's OverlappedPresenter
-
-    public static void MaximizeWindow(Window window) {
-        if(window is not null) {
-
-            // Get the AppWindow
-            var appWindow = GetAppWindowFromWindow(window);
-
-            var presenter = appWindow?.Presenter as OverlappedPresenter;
-            presenter?.Maximize();
-        }
-    }
-
     // Method to create a new window, add custom title bar, and optionally maximize
-    public static Window CreateNewWindow(Window newWindow, string title, bool maximize = false) {
+    public static Window CreateNewWindow(WindowEx newWindow, string title,
+        bool maximize = false, double width = 1200, double height = 600, bool canMaximize = false, bool canResize = false) {
+
+        if(maximize) {
+            newWindow.Maximize();
+        }
+        newWindow.Height = height;
+        newWindow.Width = width;
+        newWindow.IsResizable = canMaximize;
+        newWindow.IsMaximizable = canMaximize;
+        newWindow.CenterOnScreen();
 
         // Configure the custom title bar for the new window
         ConfigureCustomTitleBar(newWindow, title);
 
-        if(maximize) {
-            MaximizeWindow(newWindow);
-        }
 
         newWindow.Activate();
 

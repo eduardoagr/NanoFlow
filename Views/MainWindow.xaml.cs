@@ -1,6 +1,6 @@
 namespace NanoFlow.Views;
 
-public sealed partial class MainWindow : Window {
+public sealed partial class MainWindow : WindowEx {
 
     public MainViewModel? ViewModel { get; set; }
 

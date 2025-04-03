@@ -1,6 +1,6 @@
 namespace NanoFlow.Views {
 
-    public sealed partial class _3DViwerWidnow : Window {
+    public sealed partial class _3DViwerWidnow : WindowEx {
 
         public _3DViwerViewModel _3DViwerViewModel { get; set; }
 

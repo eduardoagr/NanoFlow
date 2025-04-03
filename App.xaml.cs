@@ -65,7 +65,7 @@ public partial class App : Application {
 
         WindowHelper.ConfigureCustomTitleBar(window, Constants.appTitle);
 
-        WindowHelper.MaximizeWindow(window);
+        window.Maximize();
 
         window.Activate();
     }

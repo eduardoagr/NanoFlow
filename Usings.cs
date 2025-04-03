@@ -12,6 +12,7 @@ global using Microsoft.UI.Xaml;
 global using Microsoft.UI.Xaml.Controls;
 global using Microsoft.UI.Xaml.Input;
 global using Microsoft.UI.Xaml.Media;
+global using Microsoft.UI.Xaml.Media.Animation;
 global using Microsoft.UI.Xaml.Shapes;
 
 global using NanoFlow.Controls;
@@ -37,6 +38,8 @@ global using System.Linq;
 global using System.Threading.Tasks;
 
 global using WinRT.Interop;
+
+global using WinUIEx;
 
 global using Color = Windows.UI.Color;
 global using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;

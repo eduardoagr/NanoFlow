@@ -1,10 +1,10 @@
-using Microsoft.UI.Xaml.Media.Animation;
+
 
 using Point = Windows.Foundation.Point;
 
 namespace NanoFlow.Views;
 
-public sealed partial class FileExplorerWindow : Window {
+public sealed partial class FileExplorerWindow : WindowEx {
 
     public FileExplorerWindowViewModel FileExplorerWindowViewModel { get; set; }
 
@@ -67,7 +67,7 @@ public sealed partial class FileExplorerWindow : Window {
 
             FloatingPanel.RenderTransform = new TranslateTransform {
                 X = pos.X,
-                Y = pos.Y - 20
+                Y = pos.Y + 10
             };
 
             FloatingPanel.IsHitTestVisible = false;
