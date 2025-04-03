@@ -24,7 +24,7 @@ namespace NanoFlow.Views {
             lineModel = new LineGeometryModel3D {
                 Geometry = _3DViwerViewModel.Root, // Assign geometry from the ViewModel
                 Thickness = 2.0,
-                Color = Colors.Green
+                Color = Colors.GreenYellow
             };
 
             // Add the model to the Viewport3DX

@@ -28,7 +28,7 @@ public static class WindowHelper {
 
             var customTitleBar = new CustomTitleBar(window, titleBarViewModel) {
                 DataContext = titleBarViewModel,
-                Height = 42,
+                Height = 48,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Top,
             };
