@@ -32,5 +32,17 @@
                 }
             }
         }
+
+        public string FormatFileSize(long sizeInBytes) {
+            if(sizeInBytes < 1024) {
+                return $"{sizeInBytes} B";
+            }
+            else if(sizeInBytes < 1024 * 1024) {
+                return $"{sizeInBytes / 1024.0:F2} KB";
+            }
+            else {
+                return $"{sizeInBytes / (1024.0 * 1024.0):F2} MB";
+            }
+        }
     }
 }

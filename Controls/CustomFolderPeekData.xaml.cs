@@ -7,9 +7,14 @@ namespace NanoFlow.Controls {
             InitializeComponent();
         }
 
-        public void UpdateContent(int FolderCount) {
+        public void UpdateContent(string CreationDate, string Name, string Count, string Size,
+            string Owner) {
 
-            FileNum.Text = $"Number of files: {FolderCount}";
+            FolderCreationDate.Text = $"Creation dete : {CreationDate}";
+            FolderName.Text = $"Name : {Name}";
+            FolderCount.Text = $"Files : {Count}";
+            FoldeSize.Text = $"Size : {Size}";
+            FolderOwner.Text = $"Owner : {Owner.Split('\\')[0]}";
         }
 
         public void ShowPanel() {

@@ -46,20 +46,31 @@ public sealed partial class FileExplorerWindow : Window {
         if(sender is FrameworkElement container
             && container.DataContext is FolderItem folderItem) {
 
-            string folderName = folderItem.FileName;
-            int folderCount = FolderService.GetgcodeItems(folderName).Count;
+            var directoryInfo = new DirectoryInfo(folderItem.FilePath);
+
+            var folderName = folderItem.FileName;
+            var folderCount = FolderService.GetgcodeItems(folderName).Count;
+            var FolderSize = FolderService.GetgcodeItems(folderName).Sum(x => x.FileSize);
+            var FolderReadableFileSize = folderItem.FormatFileSize(FolderSize);
+            var FolderCreationDate = directoryInfo.CreationTime;
+            var directorySecurity = directoryInfo.GetAccessControl();
+            string folderOwner = directorySecurity.GetOwner(typeof(System.Security.Principal.NTAccount))!.ToString();
 
             // Calculate the position of the hovered item
             var transform = container.TransformToVisual(rootContainer);
             var pos = transform.TransformPoint(new Point
-                (0, container.ActualHeight - 36));
+                (0, container.ActualHeight));
 
-            FloatingPanel.UpdateContent(folderCount);
+            FloatingPanel.UpdateContent(FolderCreationDate.ToString("d"),
+                folderName, folderCount.ToString(),
+                FolderReadableFileSize, folderOwner);
 
             FloatingPanel.RenderTransform = new TranslateTransform {
                 X = pos.X,
-                Y = pos.Y
+                Y = pos.Y - 20
             };
+
+            FloatingPanel.IsHitTestVisible = false;
 
             FloatingPanel.ShowPanel();
         }

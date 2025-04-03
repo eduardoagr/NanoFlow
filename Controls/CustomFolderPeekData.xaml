@@ -24,7 +24,27 @@
         </Border.RenderTransform>
         <StackPanel>
             <TextBlock
-                x:Name="FileNum"
+                x:Name="FolderCreationDate"
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <TextBlock
+                x:Name="FolderName"
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <TextBlock
+                x:Name="FolderCount"
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <TextBlock
+                x:Name="FoldeSize"
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <TextBlock
+                x:Name="FolderOwner"
                 FontSize="14"
                 FontWeight="Bold" />
         </StackPanel>
