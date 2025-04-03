@@ -1,5 +1,3 @@
-
-
 using Point = Windows.Foundation.Point;
 
 namespace NanoFlow.Views;
