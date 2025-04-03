@@ -62,10 +62,11 @@ public partial class App : Application {
     protected override void OnLaunched(LaunchActivatedEventArgs args) {
 
         var window = Services!.GetRequiredService<MainWindow>();
-
-        WindowHelper.ConfigureCustomTitleBar(window, Constants.appTitle);
+        window.SystemBackdrop = new DesktopAcrylicBackdrop();
 
         window.Maximize();
+
+        WindowHelper.ConfigureCustomTitleBar(window, Constants.appTitle);
 
         window.Activate();
     }

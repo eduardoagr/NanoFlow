@@ -67,6 +67,8 @@ public static class WindowHelper {
         newWindow.IsMaximizable = canMaximize;
         newWindow.CenterOnScreen();
 
+        newWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
+
         // Configure the custom title bar for the new window
         ConfigureCustomTitleBar(newWindow, title);
 
