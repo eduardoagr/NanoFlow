@@ -2,7 +2,6 @@
     x:Class="NanoFlow.Views.FileExplorerWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Interactions="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:controls="using:NanoFlow.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -36,11 +35,11 @@
                 SelectedItem="{x:Bind FileExplorerWindowViewModel.SelectedFolderItem, Mode=TwoWay}"
                 SelectionMode="Single">
                 <Interactivity:Interaction.Behaviors>
-                    <Interactions:EventTriggerBehavior EventName="SelectionChanged">
-                        <Interactions:InvokeCommandAction
+                    <Interactivity:EventTriggerBehavior EventName="SelectionChanged">
+                        <Interactivity:InvokeCommandAction
                             Command="{x:Bind FileExplorerWindowViewModel.FolderSeletedCommand}"
                             CommandParameter="{Binding}" />
-                    </Interactions:EventTriggerBehavior>
+                    </Interactivity:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:FolderItem">
@@ -78,8 +77,8 @@
                 <AutoSuggestBox
                     Width="400"
                     Margin="0,10,0,0"
-                    QueryIcon="Find"
                     PlaceholderText="Search for a file"
+                    QueryIcon="Find"
                     Text="{x:Bind FileExplorerWindowViewModel.SearchBoxText, Mode=TwoWay}"
                     Visibility="{x:Bind FileExplorerWindowViewModel.SearchBoxVisibility, Mode=TwoWay}" />
 
