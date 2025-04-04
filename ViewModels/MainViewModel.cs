@@ -1,6 +1,4 @@
-﻿using Constants = NanoFlow.Helpers.Constants;
-
-namespace NanoFlow.ViewModels;
+﻿namespace NanoFlow.ViewModels;
 
 public partial class MainViewModel(IServiceProvider serviceProvider,
     IDialogService _dialogService) : ObservableObject {

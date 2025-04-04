@@ -1,8 +1,4 @@
-﻿using Serilog;
-
-using Constants = NanoFlow.Helpers.Constants;
-
-namespace NanoFlow;
+﻿namespace NanoFlow;
 
 public partial class App : Application {
 
@@ -62,7 +58,7 @@ public partial class App : Application {
     protected override void OnLaunched(LaunchActivatedEventArgs args) {
 
         var window = Services!.GetRequiredService<MainWindow>();
-        window.SystemBackdrop = new DesktopAcrylicBackdrop();
+        window.SystemBackdrop = new MicaBackdrop();
 
         window.Maximize();
 

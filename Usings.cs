@@ -24,6 +24,8 @@ global using NanoFlow.ViewModels;
 global using NanoFlow.Views;
 global using NanoFlow.Views.Dialogs;
 
+global using Serilog;
+
 global using SharpDX;
 
 global using Syncfusion.Licensing;
@@ -42,6 +44,7 @@ global using WinRT.Interop;
 global using WinUIEx;
 
 global using Color = Windows.UI.Color;
+global using Constants = NanoFlow.Helpers.Constants;
 global using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 global using Path = System.IO.Path;
 
