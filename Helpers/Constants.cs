@@ -1,4 +1,5 @@
-﻿namespace NanoFlow.Helpers;
+﻿
+namespace NanoFlow.Helpers;
 
 public class Constants {
 
@@ -30,6 +31,8 @@ public class Constants {
 
     public const string baseImagePath = "/Assets";
 
+    internal static string appIconPath = $"AppIcon.ico";
+
 
     // Folders
     public const string desktop = "Desktop";
@@ -38,7 +41,6 @@ public class Constants {
     public const string gcodeFolder = "Gcode";
 
     public const string Folder = "folder";
-
 
     public static string GetImagePath(string name) {
 

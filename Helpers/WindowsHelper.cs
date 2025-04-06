@@ -22,6 +22,9 @@ public static class WindowHelper {
 
             window.ExtendsContentIntoTitleBar = true;
 
+            window.Title = title;
+            window.SetIcon(Constants.appIconPath);
+
             var titleBarViewModel = new CustomTitleBarViewModel(window) {
                 AppTitle = title,
             };
