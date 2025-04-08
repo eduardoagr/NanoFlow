@@ -20,9 +20,6 @@
                     <SolidColorBrush
                         x:Key="ItemSelectedBackgroundBrush"
                         Color="#CCE8FF" />
-                    <SolidColorBrush
-                        x:Key="DetailsPaneBackgroundBrush"
-                        Color="Transparent" />
                     <!--  Light theme  -->
                 </ResourceDictionary>
 
@@ -31,9 +28,6 @@
                     <SolidColorBrush
                         x:Key="ItemSelectedBackgroundBrush"
                         Color="#505050" />
-                    <SolidColorBrush
-                        x:Key="DetailsPaneBackgroundBrush"
-                        Color="#202020" />
                     <!--  Dark theme  -->
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>

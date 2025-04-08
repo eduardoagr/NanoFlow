@@ -39,27 +39,18 @@
                             AllowedSizeModes="Large"
                             Command="{x:Bind ViewModel.OpenFileExplorerCommand}"
                             Content="Open file"
-                            ToolTipService.ToolTip="OpenDesign">
+                            ToolTipService.ToolTip="Open Design">
                             <ribbon:RibbonButton.Icon>
                                 <SymbolIcon Symbol="OpenFile" />
                             </ribbon:RibbonButton.Icon>
                         </ribbon:RibbonButton>
                         <ribbon:RibbonButton
                             AllowedSizeModes="Large"
-                            Command="{x:Bind ViewModel.SaveToSTLCommand}"
-                            Content="save STL"
-                            ToolTipService.ToolTip="Save design in STL format">
+                            Command="{x:Bind ViewModel.SaveGcodeCommand}"
+                            Content="save to gcode"
+                            ToolTipService.ToolTip="Save design in Gcode format">
                             <ribbon:RibbonButton.Icon>
                                 <SymbolIcon Symbol="Save" />
-                            </ribbon:RibbonButton.Icon>
-                        </ribbon:RibbonButton>
-                        <ribbon:RibbonButton
-                            AllowedSizeModes="Large"
-                            Command="{x:Bind ViewModel.SaveGcodeCommand}"
-                            Content="save G-Code"
-                            ToolTipService.ToolTip="Save design in G-code format">
-                            <ribbon:RibbonButton.Icon>
-                                <SymbolIcon Symbol="Go" />
                             </ribbon:RibbonButton.Icon>
                         </ribbon:RibbonButton>
                     </ribbon:RibbonGroup>

@@ -84,7 +84,9 @@
 		<None Remove="Views\StlDialog.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="AppIcon.ico" />
+		<Content Include="AppIcon.ico">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 	<ItemGroup>
 		<Manifest Include="$(ApplicationManifest)" />

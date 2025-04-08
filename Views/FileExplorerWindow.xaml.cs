@@ -78,4 +78,5 @@ public sealed partial class FileExplorerWindow : WindowEx {
 
         FloatingPanel.HidePanel();
     }
+
 }

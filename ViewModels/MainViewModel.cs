@@ -41,31 +41,6 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
     #region Relay commands
 
     [RelayCommand]
-    async Task SaveToSTLAsync() {
-
-        if(_rootContainer is not null) {
-            var viewModel = await _dialogService.ShowStlDialog(_rootContainer.XamlRoot);
-
-            if(viewModel != null) {
-
-                var fileName = viewModel.stlSettigs.Filename;
-
-                if(string.IsNullOrWhiteSpace(fileName)) {
-                    fileName = "MyDesign.stl";
-                }
-                else if(!fileName.EndsWith(Constants.stl, StringComparison.OrdinalIgnoreCase)) {
-                    fileName += Constants.stl;
-                }
-
-                GetLineData();
-
-                NotificationHelper.Toast(fileName);
-
-            }
-        }
-    }
-
-    [RelayCommand]
     async Task SaveGcodeAsync() {
 
         if(_rootContainer?.XamlRoot == null) {

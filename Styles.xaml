@@ -107,11 +107,5 @@
         </Setter>
     </Style>
 
-    <Style
-        x:Key="DetailsPanelStyle"
-        TargetType="Grid">
-        <Setter Property="Background" Value="{ThemeResource DetailsPaneBackgroundBrush}" />
-    </Style>
-
 
 </ResourceDictionary>
