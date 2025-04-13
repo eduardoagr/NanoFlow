@@ -1,5 +1,4 @@
-﻿
-namespace NanoFlow.Helpers;
+﻿namespace NanoFlow.Helpers;
 
 public class Constants {
 
@@ -31,7 +30,13 @@ public class Constants {
 
     public const string baseImagePath = "/Assets";
 
-    internal static string appIconPath = $"AppIcon.ico";
+    public const string appIconPath = $"AppIcon.ico";
+
+    public static string? printerPort = null;
+
+    public static SerialPort? OpenedPort = null;
+
+    public const int printerBaudRate = 9600;
 
 
     // Folders

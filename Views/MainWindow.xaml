@@ -74,9 +74,33 @@
                             </ribbon:RibbonButton.Icon>
                         </ribbon:RibbonButton>
                     </ribbon:RibbonGroup>
+                    <ribbon:RibbonGroup Header="connections">
+                        <ribbon:RibbonButton
+                            AllowedSizeModes="Large"
+                            Command="{x:Bind ViewModel.GetComPortsCommandCommand}"
+                            Content="Conect to a printer"
+                            ToolTipService.ToolTip="Add a printer">
+                            <ribbon:RibbonButton.Icon>
+                                <SymbolIcon Symbol="Print" />
+                            </ribbon:RibbonButton.Icon>
+                        </ribbon:RibbonButton>
+                    </ribbon:RibbonGroup>
                 </ribbon:RibbonTab>
             </ribbon:SfRibbon.Tabs>
         </ribbon:SfRibbon>
+
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom">
+            <Ellipse
+                x:Name="ConnectedPrinterIndictor"
+                Width="30"
+                Height="30"
+                Margin="10"
+                HorizontalAlignment="Right"
+                Fill="Red" />
+        </StackPanel>
     </Grid>
 
 </winex:WindowEx>

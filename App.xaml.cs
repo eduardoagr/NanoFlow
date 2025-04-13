@@ -18,12 +18,7 @@ public partial class App : Application {
 
         services.AddTransient<GcodeDialogViewModel>();
 
-        services.AddTransient<StlSettingsDialogViewModel>();
-
         services.AddTransient<IDialogService, DialogService>();
-
-        services.AddTransient(p =>
-                            new StlSettingsDialog(p.GetRequiredService<StlSettingsDialogViewModel>()));
 
         services.AddTransient(p =>
                             new GcodeSettingsDialog(p.GetRequiredService<GcodeDialogViewModel>()));

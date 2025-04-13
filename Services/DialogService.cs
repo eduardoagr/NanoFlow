@@ -74,19 +74,5 @@
             var result = await dialog.ShowAsync();
             return result == ContentDialogResult.Primary;
         }
-
-        public async Task<StlSettingsDialogViewModel?> ShowStlDialog(XamlRoot xamlRoot) {
-
-            // Resolve the dialog with its ViewModel
-            var stlDialog = serviceProvider.GetRequiredService<StlSettingsDialog>();
-            stlDialog.XamlRoot = xamlRoot;
-
-            var result = await stlDialog.ShowAsync();
-            if(result == ContentDialogResult.Primary) {
-                return stlDialog._viewModel;
-            }
-
-            return null;
-        }
     }
 }

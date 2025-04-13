@@ -1,4 +1,6 @@
-﻿namespace NanoFlow.ViewModels;
+﻿using System.IO.Ports;
+
+namespace NanoFlow.ViewModels;
 
 public partial class MainViewModel(IServiceProvider serviceProvider,
     IDialogService _dialogService) : ObservableObject {
@@ -21,6 +23,10 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
 
     public List<Tuple<PointModel, PointModel>> LineData = [];
 
+    public ObservableCollection<string> ComPorts = [];
+
+    public event Action<ObservableCollection<string>> ComPortsListAction;
+
     public List<PointModel> _selectedPoints = [];
 
     #endregion
@@ -39,6 +45,12 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
     }
 
     #region Relay commands
+
+    [RelayCommand]
+    void GetComPortsCommand() {
+        GetComPorts();
+        ComPortsListAction?.Invoke(ComPorts);
+    }
 
     [RelayCommand]
     async Task SaveGcodeAsync() {
@@ -127,8 +139,6 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
 
                 _drawingHelper.DrawLine(startPoint, endPoint);
             }
-
-
         }
         _drawingHelper.RemoveGridMarginsAndTextBlocks();
     }
@@ -190,39 +200,6 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
         }
 
         return extrudedLines;
-    }
-
-    public string ExportSTL(string filename, double thickness) {
-
-        GetLineData();
-        var extrudedLines = Generate3DLines(thickness);
-
-        // Validate extrudedLines before proceeding
-        if(extrudedLines.Count == 0) {
-            throw new InvalidOperationException("No 3D geometry created. Check the logic in Generate3DLines.");
-        }
-
-        var stlFilePath = FilePathManager.GetFilePath(filename);
-
-        var stlContent = new StringWriter(CultureInfo.InvariantCulture);
-        stlContent.WriteLine("solid Model");
-
-        foreach(var rectangle in extrudedLines) {
-
-            var p1 = rectangle.Item1;
-            var p2 = rectangle.Item2;
-            var p3 = rectangle.Item3;
-            var p4 = rectangle.Item4;
-
-            AddRectangleToSTL(stlContent, p1, p2, p3, p4);
-
-        }
-
-        stlContent.WriteLine("endsolid Model");
-
-        File.WriteAllText(stlFilePath, stlContent.ToString());
-
-        return stlFilePath;
     }
 
     public void ExportToGcode(string fileName, string printerModel,
@@ -294,26 +271,12 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
 
     }
 
-
-    private static void AddRectangleToSTL(StringWriter stl, PointModel3D p1, PointModel3D p2,
-        PointModel3D p3, PointModel3D p4) {
-
-        // Define two triangles for the rectangle
-        AddTriangleToStl(stl, p1, p2, p3); // Triangle 1
-        AddTriangleToStl(stl, p1, p3, p4); // Triangle 2
+    public void GetComPorts() {
+        ComPorts.Clear();
+        foreach(var port in SerialPort.GetPortNames()) {
+            ComPorts.Add(port);
+        }
     }
-
-    private static void AddTriangleToStl(StringWriter stl, PointModel3D v1,
-        PointModel3D v2, PointModel3D v3) {
-        stl.WriteLine("  facet normal 0 0 0"); // Normal vector (set to 0 for simplicity)
-        stl.WriteLine("    outer loop");
-        stl.WriteLine($"      vertex {v1.X} {v1.Y} {v1.Z}");
-        stl.WriteLine($"      vertex {v2.X} {v2.Y} {v2.Z}");
-        stl.WriteLine($"      vertex {v3.X} {v3.Y} {v3.Z}");
-        stl.WriteLine("    endloop");
-        stl.WriteLine("  endfacet");
-    }
-
     #region UI Event Handlers
 
     private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e) {

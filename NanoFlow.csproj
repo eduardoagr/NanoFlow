@@ -78,7 +78,6 @@
 		<None Remove="Styles.xaml" />
 		<None Remove="Views\3DViwerWidnow.xaml" />
 		<None Remove="Views\Dialogs\GcodeSettingsDialog.xaml" />
-		<None Remove="Views\Dialogs\StlSettingsDialog.xaml" />
 		<None Remove="Views\FileExplorerWindow.xaml" />
 		<None Remove="Views\MainWindow.xaml" />
 		<None Remove="Views\StlDialog.xaml" />
@@ -104,15 +103,16 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
 		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
 		<PackageReference Include="HelixToolkit.WinUI" Version="2.27.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250401001" />
 		<PackageReference Include="Serilog" Version="4.2.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="29.1.35" />
-		<PackageReference Include="Syncfusion.Ribbon.WinUI" Version="29.1.35" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="29.1.37" />
+		<PackageReference Include="Syncfusion.Ribbon.WinUI" Version="29.1.37" />
+		<PackageReference Include="System.IO.Ports" Version="9.0.4" />
 		<PackageReference Include="WinUIEx" Version="2.5.1" />
 	</ItemGroup>
 	<ItemGroup>
@@ -200,5 +200,6 @@
 		<PublishTrimmed Condition="'$(Configuration)' != 'Debug'">False</PublishTrimmed>
 		<ApplicationIcon>AppIcon.ico</ApplicationIcon>
 		<PlatformTarget>x64</PlatformTarget>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 </Project>

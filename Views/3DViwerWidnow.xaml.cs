@@ -4,7 +4,7 @@ namespace NanoFlow.Views {
 
         public _3DViwerViewModel _3DViwerViewModel { get; set; }
 
-        private LineGeometryModel3D lineModel;
+        private LineGeometryModel3D? lineModel;
 
         public _3DViwerWidnow(_3DViwerViewModel ViwerViewModel) {
 
@@ -14,8 +14,22 @@ namespace NanoFlow.Views {
             _3DViwerViewModel = ViwerViewModel;
             rootContainer.DataContext = _3DViwerViewModel;
 
+            ViwerViewModel.errorPortMsg += async () => {
+                // Show error message
+
+                var messageDlg = new ContentDialog {
+                    Title = "Error",
+                    Content = "Please chech that you are conneted printed",
+                    PrimaryButtonText = Constants.ok,
+                    XamlRoot = Content.XamlRoot
+                };
+
+                await messageDlg.ShowAsync();
+
+            };
             // Initialize the 3D content
             Initialize3DModel();
+
         }
 
         private void Initialize3DModel() {
@@ -30,5 +44,7 @@ namespace NanoFlow.Views {
             // Add the model to the Viewport3DX
             Viewport3DX.Items.Add(lineModel);
         }
+
+
     }
 }

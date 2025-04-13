@@ -2,11 +2,8 @@
     x:Class="NanoFlow.Views._3DViwerWidnow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:editors="using:Syncfusion.UI.Xaml.Editors"
     xmlns:hx="using:HelixToolkit.WinUI"
-    xmlns:local="using:NanoFlow.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:winex="using:WinUIEx"
     Title="3DViwerWidnow"
@@ -25,7 +22,6 @@
             </Grid.ColumnDefinitions>
 
             <ScrollViewer
-                Grid.Column="0"
                 HorizontalScrollMode="Auto"
                 VerticalScrollMode="Auto">
                 <TextBox
@@ -46,12 +42,18 @@
 
                 <TextBlock
                     Padding="10"
+                    VerticalAlignment="Center"
                     FontSize="14"
                     FontWeight="Bold">
                     <Run Text="Print time: " />
                     <Run Text="{x:Bind _3DViwerViewModel.EstimatedPrintTime, Mode=OneWay}" />
                 </TextBlock>
 
+                <Button
+                    Margin="10"
+                    HorizontalAlignment="Right"
+                    Command="{x:Bind _3DViwerViewModel.SentToPrinterCommand}"
+                    Content="Send to printer" />
 
                 <!--  3D Viewer  -->
                 <hx:Viewport3DX
@@ -66,9 +68,6 @@
                     ShowCoordinateSystem="True"
                     ShowViewCube="False" />
             </Grid>
-
-
-
         </Grid>
     </Grid>
 </winex:WindowEx>

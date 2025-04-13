@@ -36,6 +36,7 @@ global using System.Collections.ObjectModel;
 global using System.Diagnostics;
 global using System.Globalization;
 global using System.IO;
+global using System.IO.Ports;
 global using System.Linq;
 global using System.Threading.Tasks;
 

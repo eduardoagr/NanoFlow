@@ -1,5 +1,8 @@
 ﻿namespace NanoFlow.ViewModels {
+
     public partial class _3DViwerViewModel : ObservableObject {
+
+        public event Action? errorPortMsg;
 
         [ObservableProperty]
         private string fileContent;
@@ -116,6 +119,19 @@
             }
 
             return positions;
+        }
+
+        [RelayCommand]
+        void SentToPrinter() {
+
+            if(Constants.OpenedPort != null && Constants.OpenedPort.IsOpen) {
+
+                Constants.OpenedPort.WriteLine(FileContent);
+            }
+            else if(Constants.OpenedPort == null || !Constants.OpenedPort.IsOpen) {
+
+                errorPortMsg?.Invoke();
+            }
         }
     }
 }
