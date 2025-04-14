@@ -41,6 +41,8 @@ public sealed partial class MainWindow : WindowEx {
                         Constants.OpenedPort.Open();
 
                         ConnectedPrinterIndictor.Fill = new SolidColorBrush(Colors.Green);
+
+                        PrinterStatusText.Text = "Ready";
                     }
                 }
             }

@@ -1,6 +1,4 @@
-﻿using System.IO.Ports;
-
-namespace NanoFlow.ViewModels;
+﻿namespace NanoFlow.ViewModels;
 
 public partial class MainViewModel(IServiceProvider serviceProvider,
     IDialogService _dialogService) : ObservableObject {
@@ -274,7 +272,7 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
     public void GetComPorts() {
         ComPorts.Clear();
         foreach(var port in SerialPort.GetPortNames()) {
-            ComPorts.Add(port);
+            ComPorts.Add($"COM Port: {port}");
         }
     }
     #region UI Event Handlers
