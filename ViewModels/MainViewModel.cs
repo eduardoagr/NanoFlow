@@ -272,7 +272,7 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
     public void GetComPorts() {
         ComPorts.Clear();
         foreach(var port in SerialPort.GetPortNames()) {
-            ComPorts.Add($"COM Port: {port}");
+            ComPorts.Add(port);
         }
     }
     #region UI Event Handlers
