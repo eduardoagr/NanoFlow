@@ -1,4 +1,6 @@
-﻿namespace NanoFlow.ViewModels;
+﻿using System.Management;
+
+namespace NanoFlow.ViewModels;
 
 public partial class MainViewModel(IServiceProvider serviceProvider,
     IDialogService _dialogService) : ObservableObject {
@@ -277,11 +279,15 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
 
     public void GetComPorts() {
         ComPorts.Clear();
-        foreach(var port in SerialPort.GetPortNames()) {
-            ComPorts.Add(port);
-
+        using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'");
+        foreach(var queryObj in searcher.Get()) {
+            var deviceName = queryObj["Name"]?.ToString();
+            if(deviceName != null) {
+                ComPorts.Add(deviceName);
+            }
         }
     }
+
     #region UI Event Handlers
 
     private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
