@@ -110,9 +110,10 @@
 		<PackageReference Include="Serilog" Version="4.2.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-		<PackageReference Include="Syncfusion.Editors.WinUI" Version="29.1.37" />
-		<PackageReference Include="Syncfusion.Ribbon.WinUI" Version="29.1.37" />
+		<PackageReference Include="Syncfusion.Editors.WinUI" Version="29.1.38" />
+		<PackageReference Include="Syncfusion.Ribbon.WinUI" Version="29.1.38" />
 		<PackageReference Include="System.IO.Ports" Version="9.0.4" />
+		<PackageReference Include="System.Management" Version="10.0.0-preview.3.25171.5" />
 		<PackageReference Include="WinUIEx" Version="2.5.1" />
 	</ItemGroup>
 	<ItemGroup>

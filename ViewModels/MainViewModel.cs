@@ -5,6 +5,9 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
 
     #region variables and constants
 
+    [ObservableProperty]
+    bool isComPortConnected = false;
+
     private bool _areGridMarginsAdded = false;
     private Grid? _rootContainer;
     private Canvas? _canvas;
@@ -26,6 +29,9 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
     public event Action<ObservableCollection<string>> ComPortsListAction;
 
     public List<PointModel> _selectedPoints = [];
+
+    [ObservableProperty]
+    string comPortStatus = Constants.discconnectedPrinter;
 
     #endregion
 
@@ -273,8 +279,8 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
         ComPorts.Clear();
         foreach(var port in SerialPort.GetPortNames()) {
             ComPorts.Add(port);
+
         }
-    }
     #region UI Event Handlers
 
     private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e) {

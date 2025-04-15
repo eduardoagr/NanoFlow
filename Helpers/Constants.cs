@@ -36,6 +36,10 @@ public class Constants {
 
     public static SerialPort? OpenedPort = null;
 
+    public static string discconnectedPrinter = "Disconnected";
+
+    public static string connectedPrinter = "Connected";
+
     public const int printerBaudRate = 9600;
 
 

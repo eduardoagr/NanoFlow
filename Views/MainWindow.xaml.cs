@@ -40,9 +40,16 @@ public sealed partial class MainWindow : WindowEx {
 
                         Constants.OpenedPort.Open();
 
-                        ConnectedPrinterIndictor.Fill = new SolidColorBrush(Colors.Green);
+                        mainViewModel.IsComPortConnected = true;
 
-                        PrinterStatusText.Text = "Ready";
+                        if(mainViewModel.IsComPortConnected) {
+                            mainViewModel.ComPortStatus = Constants.connectedPrinter;
+                            ConnectedPrinterIndictor.Fill = new SolidColorBrush(Colors.Green);
+                        }
+                        else {
+                            mainViewModel.ComPortStatus = Constants.discconnectedPrinter;
+                            ConnectedPrinterIndictor.Fill = new SolidColorBrush(Colors.Red);
+                        }
                     }
                 }
             }
