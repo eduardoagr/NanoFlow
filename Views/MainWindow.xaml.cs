@@ -13,11 +13,8 @@ public sealed partial class MainWindow : WindowEx {
         rootContainer.DataContext = ViewModel;
 
         mainViewModel.ComPortsListAction += async (comPorts) => {
-
             if(comPorts != null) {
-
                 var portsListView = new ListView {
-
                     ItemsSource = comPorts,
                     SelectionMode = ListViewSelectionMode.Single,
                 };
@@ -31,29 +28,30 @@ public sealed partial class MainWindow : WindowEx {
                 };
 
                 if(await comDlg.ShowAsync() == ContentDialogResult.Primary) {
-
                     if(portsListView.SelectedItem is string selectedPort) {
+                        var availablePorts = SerialPort.GetPortNames();
 
-                        Constants.printerPort = selectedPort;
+                        foreach(var port in availablePorts) {
+                            if(selectedPort.Contains(port)) {
+                                Constants.printerPort = port;
+                                Constants.OpenedPort = new SerialPort(port, Constants.printerBaudRate);
+                                Constants.OpenedPort.Open();
 
-                        Constants.OpenedPort = new SerialPort(selectedPort, Constants.printerBaudRate);
+                                mainViewModel.IsComPortConnected = true;
 
-                        Constants.OpenedPort.Open();
-
-                        mainViewModel.IsComPortConnected = true;
-
-                        if(mainViewModel.IsComPortConnected) {
-                            mainViewModel.ComPortStatus = Constants.connectedPrinter;
-                            ConnectedPrinterIndictor.Fill = new SolidColorBrush(Colors.Green);
-                        }
-                        else {
-                            mainViewModel.ComPortStatus = Constants.discconnectedPrinter;
-                            ConnectedPrinterIndictor.Fill = new SolidColorBrush(Colors.Red);
+                                if(mainViewModel.IsComPortConnected) {
+                                    mainViewModel.ComPortStatus = Constants.connectedPrinter;
+                                    ConnectedPrinterIndictor.Fill = new SolidColorBrush(Colors.Green);
+                                }
+                                else {
+                                    mainViewModel.ComPortStatus = Constants.discconnectedPrinter;
+                                    ConnectedPrinterIndictor.Fill = new SolidColorBrush(Colors.Red);
+                                }
+                            }
                         }
                     }
                 }
             }
-        };
-
+        }; // Close the ComPortsListAction lambda
     }
 }

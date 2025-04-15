@@ -279,14 +279,23 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
 
     public void GetComPorts() {
         ComPorts.Clear();
-        using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'");
-        foreach(var queryObj in searcher.Get()) {
-            var deviceName = queryObj["Name"]?.ToString();
-            if(deviceName != null) {
-                ComPorts.Add(deviceName);
+        try {
+
+            using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'");
+            foreach(var queryObj in searcher.Get()) {
+                var deviceName = queryObj["Name"]?.ToString();
+                if(deviceName != null) {
+                    ComPorts.Add(deviceName);
+                }
             }
+
+        } catch(Exception) {
+
+            throw;
         }
+
     }
+    
 
     #region UI Event Handlers
 
