@@ -281,6 +281,7 @@ public partial class MainViewModel(IServiceProvider serviceProvider,
             ComPorts.Add(port);
 
         }
+    }
     #region UI Event Handlers
 
     private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
