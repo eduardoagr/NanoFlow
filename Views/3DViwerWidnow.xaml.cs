@@ -14,19 +14,18 @@ namespace NanoFlow.Views {
             _3DViwerViewModel = ViwerViewModel;
             rootContainer.DataContext = _3DViwerViewModel;
 
-            ViwerViewModel.errorPortMsg += async () => {
-                // Show error message
+            ViwerViewModel.sendMsg += async (msg) => {
+                // Handle messages from the ViewModel if needed
 
-                var messageDlg = new ContentDialog {
-                    Title = "Error",
-                    Content = "Please chech that you are conneted printed",
+                var messageDialog = new ContentDialog {
+                    Title = msg,
+                    XamlRoot = Content.XamlRoot,
                     PrimaryButtonText = Constants.ok,
-                    XamlRoot = Content.XamlRoot
                 };
 
-                await messageDlg.ShowAsync();
-
+                await messageDialog.ShowAsync();
             };
+
             // Initialize the 3D content
             Initialize3DModel();
 

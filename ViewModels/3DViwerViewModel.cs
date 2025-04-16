@@ -2,7 +2,7 @@
 
     public partial class _3DViwerViewModel : ObservableObject {
 
-        public event Action? errorPortMsg;
+        public event Action<string>? sendMsg;
 
         [ObservableProperty]
         private string fileContent;
@@ -127,10 +127,11 @@
             if(Constants.OpenedPort != null && Constants.OpenedPort.IsOpen) {
 
                 Constants.OpenedPort.WriteLine(FileContent);
+                sendMsg?.Invoke("Your design was sent to the 3D printer");
             }
             else if(Constants.OpenedPort == null || !Constants.OpenedPort.IsOpen) {
 
-                errorPortMsg?.Invoke();
+                sendMsg?.Invoke("Error");
             }
         }
     }
