@@ -65,7 +65,7 @@ public static class WindowHelper {
         }
         newWindow.Height = height;
         newWindow.Width = width;
-        newWindow.IsResizable = canMaximize;
+        newWindow.IsResizable = canResize;
         newWindow.IsMaximizable = canMaximize;
         newWindow.CenterOnScreen();
 
