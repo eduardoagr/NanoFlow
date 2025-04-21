@@ -15,7 +15,7 @@
                 Width="24"
                 Height="24"
                 Margin="10"
-                Source="/AppIcon.ico" />
+                Source="/Assets/AppIcon.png" />
 
 
             <!--  App Title  -->

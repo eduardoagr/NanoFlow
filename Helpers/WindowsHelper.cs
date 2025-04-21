@@ -25,11 +25,11 @@ public static class WindowHelper {
             window.Title = title;
             window.SetIcon(Constants.appIconPath);
 
-            var titleBarViewModel = new CustomTitleBarViewModel(window) {
+            var titleBarViewModel = new CustomTitleBarViewModel() {
                 AppTitle = title,
             };
 
-            var customTitleBar = new CustomTitleBar(window, titleBarViewModel) {
+            var customTitleBar = new CustomTitleBar(titleBarViewModel) {
                 DataContext = titleBarViewModel,
                 Height = 48,
                 HorizontalAlignment = HorizontalAlignment.Stretch,

@@ -4,11 +4,11 @@ public sealed partial class CustomTitleBar : UserControl {
 
     public CustomTitleBarViewModel ViewModel { get; set; }
 
-    public CustomTitleBar(Window window, CustomTitleBarViewModel viewModel) {
+    public CustomTitleBar(CustomTitleBarViewModel viewModel) {
 
         InitializeComponent();
 
-        ViewModel = viewModel ?? new CustomTitleBarViewModel(window);
+        ViewModel = viewModel ?? new CustomTitleBarViewModel();
 
         DataContext = ViewModel;
     }
