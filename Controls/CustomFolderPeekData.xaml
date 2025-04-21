@@ -76,7 +76,6 @@
 
                 <VisualState x:Name="peekContainerCollapsed">
                     <Storyboard>
-                        <!--  Only fade-out opacity (no translation)  -->
                         <DoubleAnimation
                             Storyboard.TargetName="peekContainer"
                             Storyboard.TargetProperty="Opacity"

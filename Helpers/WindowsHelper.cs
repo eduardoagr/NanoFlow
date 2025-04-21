@@ -4,7 +4,7 @@ public static class WindowHelper {
 
     // Helper method to get the AppWindow from a given Window
 
-    private static AppWindow? GetAppWindowFromWindow(Window window) {
+    private static AppWindow? GetAppWindowFromWindow(WindowEx window) {
         if(window is not null) {
 
             var hwnd = WindowNative.GetWindowHandle(window);
@@ -16,7 +16,7 @@ public static class WindowHelper {
 
     // Method to configure a window to use a custom title bar
 
-    public static void ConfigureCustomTitleBar(Window window, string title) {
+    public static void ConfigureCustomTitleBar(WindowEx window, string title) {
 
         if(window is not null) {
 

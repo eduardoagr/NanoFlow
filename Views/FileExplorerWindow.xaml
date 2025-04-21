@@ -1,4 +1,3 @@
- 
 <winex:WindowEx
     x:Class="NanoFlow.Views.FileExplorerWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
